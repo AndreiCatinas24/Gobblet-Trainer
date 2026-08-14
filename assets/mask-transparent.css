@@ -1,0 +1,73 @@
+/* Final Safari-safe transparent rendering for Pricolici (M) and Moroi (S). */
+html body .piece.M::before,
+html body .piece.M::after,
+html body .piece.S::before,
+html body .piece.S::after{
+  display:none!important;
+  content:none!important;
+}
+
+html body .piece .mask-art.team-b.size-M,
+html body .piece .mask-art.team-o.size-M,
+html body .piece .mask-art.team-b.size-S,
+html body .piece .mask-art.team-o.size-S{
+  content:normal!important;
+  mix-blend-mode:normal!important;
+  clip-path:none!important;
+  -webkit-clip-path:none!important;
+  background:transparent!important;
+  object-fit:contain!important;
+  position:relative!important;
+  z-index:1!important;
+}
+
+html body .piece .mask-art.team-b.size-M,
+html body .piece .mask-art.team-b.size-S{
+  filter:drop-shadow(0 0 6px rgba(49,145,255,.92)) drop-shadow(0 0 16px rgba(0,105,255,.58)) drop-shadow(0 7px 12px rgba(0,0,0,.34))!important;
+}
+html body .piece .mask-art.team-o.size-M,
+html body .piece .mask-art.team-o.size-S{
+  filter:drop-shadow(0 0 6px rgba(255,125,35,.92)) drop-shadow(0 0 16px rgba(255,88,0,.58)) drop-shadow(0 7px 12px rgba(0,0,0,.34))!important;
+}
+
+.reserve-row.medium .piece.M{
+  width:27%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+}
+.reserve-row.small .piece.S{
+  width:24%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+  margin-right:1.5%!important;
+}
+.reserve-row.medium .piece.M .mask-art,
+.reserve-row.small .piece.S .mask-art{
+  width:100%!important;
+  height:100%!important;
+  transform:none!important;
+}
+
+.cell .piece.M{
+  width:59%!important;
+  height:59%!important;
+  top:50%!important;
+  bottom:auto!important;
+  left:50%!important;
+  transform:translate(-50%,-50%)!important;
+}
+.cell .piece.S{
+  width:50%!important;
+  height:50%!important;
+  top:50%!important;
+  bottom:auto!important;
+  left:50%!important;
+  transform:translate(-50%,-50%)!important;
+}
+.cell .piece.M .mask-art,
+.cell .piece.S .mask-art{
+  width:100%!important;
+  height:100%!important;
+  transform:none!important;
+  transform-origin:center center!important;
+}
