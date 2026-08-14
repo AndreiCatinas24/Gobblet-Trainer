@@ -110,7 +110,7 @@ button.primary{background:#2563eb}button.danger{background:#7c2d12}
         <div id="historyRows"></div>
       </div>
 
-      <p class="small">Regulă: fiecare jucător are 2 piese mici, 2 medii și 2 mari. Piesele acoperite rămân în teanc și reapar când piesa de sus este mutată. Câștigă prima linie de 3 piese vizibile.</p>
+      <p class="small">Regulă: fiecare jucător are 3 piese mici, 3 medii și 3 mari. Piesele acoperite rămân în teanc și reapar când piesa de sus este mutată. Câștigă prima linie de 3 piese vizibile.</p>
     </section>
   </div>
 </div>
@@ -120,7 +120,7 @@ button.primary{background:#2563eb}button.danger{background:#7c2d12}
 const SZ={S:1,M:2,L:3}, LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 let board,reserve,turn,selected,over,history,log;
 
-function pieces(c){return ["S1","S2","M1","M2","L1","L2"].map(x=>({id:c+x,color:c,size:x[0]}))}
+function pieces(c){return ["S1","S2","S3","M1","M2","M3","L1","L2","L3"].map(x=>({id:c+x,color:c,size:x[0]}))}
 function reset(){
  board=Array.from({length:9},()=>[]);
  reserve={b:pieces("b"),o:pieces("o")};
