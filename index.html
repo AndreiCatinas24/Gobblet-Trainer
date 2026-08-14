@@ -78,6 +78,7 @@ h1{
   min-height:90px;cursor:pointer
 }
 .cell.legal{outline:4px solid var(--green);outline-offset:-5px}
+.cell.hint-target{outline:5px solid #9b6cff;outline-offset:-6px;box-shadow:0 0 0 3px rgba(155,108,255,.22),inset 0 0 0 2px rgba(91,55,0,.35)}
 .num{position:absolute;left:8px;top:6px;color:#664508;font-weight:bold;font-size:12px}
 .stack{position:absolute;right:8px;top:6px;color:#664508;font-size:11px;font-weight:bold}
 .piece{
@@ -99,6 +100,8 @@ h1{
 @media(max-width:500px){.btns{grid-template-columns:repeat(2,1fr)}}
 button.action{border:0;border-radius:11px;padding:11px 8px;background:#26364e;color:white;font-weight:bold}
 button.primary{background:#2563eb}button.danger{background:#7c2d12}
+.hint-box{display:none;margin-top:10px;padding:12px 13px;border:1px solid #4f6fa3;background:#0c1730;border-radius:12px;color:#dce7ff;font-size:14px;line-height:1.45}.hint-box.show{display:block}.hint-box strong{color:#9bc1ff}
+.rules-card{margin-top:16px;background:linear-gradient(180deg,#152138,#10192b);border:1px solid #304563;border-radius:18px;padding:18px}.rules-card h2{margin:0 0 12px;font-size:24px}.rules-card ol{margin:0;padding-left:22px;color:#d7e0ec;line-height:1.55}.rules-card li{margin:8px 0}.rules-note{margin-top:12px;padding:10px 12px;background:#0b1423;border:1px solid #283a55;border-radius:10px;color:#9fb0c6;font-size:12px;line-height:1.45}
 .coach{background:#0c1422;border:1px solid #293a55;border-radius:12px;padding:12px;min-height:96px;line-height:1.45}
 .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
 .metric{background:#0c1422;border:1px solid #293a55;border-radius:10px;padding:9px;text-align:center}
@@ -143,6 +146,7 @@ button.primary{background:#2563eb}button.danger{background:#7c2d12}
         <button id="undo" class="action">Înapoi</button>
         <button id="newgame" class="action danger">Joc nou</button>
       </div>
+      <div id="hintBox" class="hint-box"></div>
     </section>
 
     <section class="card">
@@ -161,22 +165,37 @@ button.primary{background:#2563eb}button.danger{background:#7c2d12}
         <div class="row head"><div>#</div><div>Tu</div><div>AI</div></div>
         <div id="historyRows"></div>
       </div>
-
-      <p class="small">Regulă: fiecare jucător are 3 piese mici, 3 medii și 3 mari. Piesele acoperite rămân în teanc și reapar când piesa de sus este mutată. Câștigă prima linie de 3 piese vizibile.</p>
     </section>
   </div>
+
+  <section class="rules-card">
+    <h2>Reguli de joc</h2>
+    <ol>
+      <li><strong>Scopul jocului:</strong> fii primul care aliniază 3 piese vizibile de culoarea ta pe aceeași linie, orizontal, vertical sau diagonal. Mărimea pieselor nu contează pentru linia câștigătoare.</li>
+      <li><strong>Piesele:</strong> în varianta pe care o jucăm aici, fiecare jucător are 9 piese: 3 mici (S), 3 medii (M) și 3 mari (L).</li>
+      <li><strong>La fiecare tură faci o singură mutare:</strong> fie pui pe tablă o piesă din rezervă, fie muți una dintre piesele tale deja aflate pe tablă.</li>
+      <li><strong>Unde poți pune o piesă:</strong> pe o căsuță liberă sau peste o piesă vizibilă mai mică. O piesă mare poate acoperi una medie sau mică, o piesă medie poate acoperi una mică, iar o piesă mică nu poate acoperi nicio piesă.</li>
+      <li><strong>Poți acoperi și propriile piese,</strong> nu doar piesele adversarului, dacă piesa de deasupra este mai mare.</li>
+      <li><strong>Se poate muta doar piesa vizibilă de deasupra unui teanc.</strong> O piesă acoperită nu poate fi mutată până când piesele de deasupra ei nu sunt îndepărtate.</li>
+      <li><strong>Piesele acoperite nu dispar.</strong> Ele rămân în căsuța respectivă. Când piesa de deasupra este mutată, piesa de dedesubt reapare și contează imediat din nou pe tablă.</li>
+      <li><strong>O piesă poate fi mutată în orice altă căsuță legală.</strong> Nu trebuie să fie o căsuță vecină.</li>
+      <li><strong>Victoria se verifică după fiecare mutare.</strong> Dacă prin ridicarea unei piese descoperi o linie de 3 a adversarului, acea linie devine activă imediat, deci trebuie să ții minte ce se află sub piesele acoperite.</li>
+      <li><strong>„Mutarea optimă” nu execută mutarea pentru tine.</strong> Butonul selectează piesa recomandată și marchează cu mov căsuța în care motorul consideră că ar trebui mutată. Tu confirmi mutarea apăsând pe căsuța indicată.</li>
+    </ol>
+    <div class="rules-note">Notă: setul fizic din fotografia ta are 9 piese pentru fiecare culoare. Jocul comercial Gobblet Gobblers este întâlnit frecvent și în versiunea cu 6 piese per jucător; aplicația aceasta este configurată pentru setul tău, 9 vs. 9.</div>
+  </section>
 </div>
 
 <script>
 (function(){
 const SZ={S:1,M:2,L:3}, LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-let board,reserve,turn,selected,over,history,log;
+let board,reserve,turn,selected,over,history,log,hintMove;
 
 function pieces(c){return ["S1","S2","S3","M1","M2","M3","L1","L2","L3"].map(x=>({id:c+x,color:c,size:x[0]}))}
 function reset(){
  board=Array.from({length:9},()=>[]);
  reserve={b:pieces("b"),o:pieces("o")};
- turn="b"; selected=null; over=false; history=[]; log=[];
+ turn="b"; selected=null; over=false; history=[]; log=[]; hintMove=null; hideHint();
  msg("Selectează o piesă albastră, apoi o căsuță. Centrul este valoros, dar nu consuma automat o piesă mare acolo.");
  render();
 }
@@ -233,10 +252,11 @@ function bestMove(color){
  load(base);return {m:best,v:bestv}
 }
 function desc(m){return !m?"—":(m.kind==="r"?`${m.size} → ${m.to+1}`:`${m.size}: ${m.from+1} → ${m.to+1}`)}
-function selectReserve(id){if(turn!=="b"||over)return;let p=reserve.b.find(x=>x.id===id);if(!p)return;selected={kind:"r",id:p.id,size:p.size,from:null};render()}
-function selectCellPiece(i){if(turn!=="b"||over)return;let p=top(i);if(p&&p.color==="b"){selected={kind:"b",id:p.id,size:p.size,from:i};render()}}
+function selectReserve(id){if(turn!=="b"||over)return;let p=reserve.b.find(x=>x.id===id);if(!p)return;hintMove=null;hideHint();selected={kind:"r",id:p.id,size:p.size,from:null};render()}
+function selectCellPiece(i){if(turn!=="b"||over)return;let p=top(i);if(p&&p.color==="b"){hintMove=null;hideHint();selected={kind:"b",id:p.id,size:p.size,from:i};render()}}
 function userTo(i){
  if(turn!=="b"||over||!selected)return;
+ hintMove=null;hideHint();
  let p=selected.kind==="r"?reserve.b.find(x=>x.id===selected.id):top(selected.from);
  if(!p||!legal(p,selected.from).includes(i)){msg("Mutare ilegală. O piesă poate acoperi doar o piesă mai mică.");return}
  let before=clone(), recommended=bestMove("b").m;
@@ -256,10 +276,21 @@ function ai(){
 }
 function finish(w){over=true;msg(w==="b"?"Ai câștigat.":"AI a câștigat. Apasă „Înapoi” ca să refaci ultima decizie.");render()}
 function undo(){
- if(!history.length)return;let h=history.pop();load(h.state);log=h.log;selected=null;over=false;msg("Am revenit înaintea ultimei tale mutări.");render()
+ if(!history.length)return;let h=history.pop();load(h.state);log=h.log;selected=null;over=false;hintMove=null;hideHint();msg("Am revenit înaintea ultimei tale mutări.");render()
 }
-function hint(){if(turn!=="b"||over)return;let b=bestMove("b");msg(`Sugestie: ${desc(b.m)}. Motivul principal: maximizează presiunea și reduce răspunsurile tactice ale adversarului.`)}
+function hint(){
+ if(turn!=="b"||over)return;
+ let b=bestMove("b"); if(!b.m)return;
+ hintMove=b.m;
+ selected={kind:b.m.kind,id:b.m.id,size:b.m.size,from:b.m.from};
+ const box=document.getElementById("hintBox");
+ box.innerHTML=`<strong>Mutarea recomandată: ${desc(b.m)}</strong><br>${b.m.kind==="r"?`Selectez pentru tine piesa ${b.m.size} din rezervă.`:`Selectez piesa ${b.m.size} din căsuța ${b.m.from+1}.`} Apasă pe căsuța <strong>${b.m.to+1}</strong>, marcată cu mov, pentru a executa mutarea.`;
+ box.classList.add("show");
+ msg(`Mutarea optimă este ${desc(b.m)}. Am selectat piesa și am marcat destinația cu mov.`);
+ render();
+}
 function analyze(){if(turn!=="b"||over)return;let b=bestMove("b");msg(`Poziție: ${score("b")>60?"avantaj albastru":score("b")<-60?"avantaj portocaliu":"aproape egal"}. Cea mai bună mutare găsită: ${desc(b.m)}.`)}
+function hideHint(){let b=document.getElementById("hintBox");if(b){b.classList.remove("show");b.innerHTML=""}}
 function msg(t){document.getElementById("coach").textContent=t}
 function render(){
  document.getElementById("status").textContent=over?(winner()==="b"?"Ai câștigat":"AI a câștigat"):(turn==="b"?"Rândul tău":"AI gândește...");
@@ -267,6 +298,7 @@ function render(){
  if(selected){let p=selected.kind==="r"?reserve.b.find(x=>x.id===selected.id):top(selected.from);if(p)leg=legal(p,selected.from)}
  document.querySelectorAll(".cell").forEach((c,i)=>{
    c.classList.toggle("legal",leg.includes(i));
+   c.classList.toggle("hint-target",!!hintMove&&hintMove.to===i);
    c.innerHTML=`<span class="num">${i+1}</span>`;
    if(board[i].length>1)c.innerHTML+=`<span class="stack">×${board[i].length}</span>`;
    let p=top(i);if(p){
