@@ -1,0 +1,4 @@
+.team-dot{display:none!important}
+.piece:has(.team-dot.blue) .mask-art{filter:drop-shadow(0 0 5px rgba(49,145,255,.85)) drop-shadow(0 0 13px rgba(0,105,255,.55)) drop-shadow(0 7px 12px rgba(0,0,0,.42))}
+.piece:has(.team-dot.orange) .mask-art{filter:hue-rotate(178deg) saturate(1.32) brightness(1.04) drop-shadow(0 0 5px rgba(255,125,35,.95)) drop-shadow(0 0 14px rgba(255,88,0,.62)) drop-shadow(0 7px 12px rgba(0,0,0,.42))}
+.piece:has(.team-dot.orange).selected .mask-art{filter:hue-rotate(178deg) saturate(1.32) brightness(1.04) drop-shadow(0 0 7px rgba(255,125,35,1)) drop-shadow(0 0 18px rgba(255,88,0,.78)) drop-shadow(0 7px 12px rgba(0,0,0,.42))}
