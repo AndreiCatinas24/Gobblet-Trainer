@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220">
+  <defs>
+    <filter id="boost" x="-20%" y="-20%" width="140%" height="140%">
+      <feColorMatrix type="matrix" values="1 1 1 0 0  1 1 1 0 0  1 1 1 0 0  0 0 0 1 0"/>
+    </filter>
+    <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="220" height="220" style="mask-type:luminance">
+      <rect width="220" height="220" fill="black"/>
+      <image href="mask-medium.svg?v=20260814j" width="220" height="220" filter="url(#boost)"/>
+      <ellipse cx="110" cy="108" rx="58" ry="84" fill="white"/>
+      <circle cx="177" cy="173" r="31" fill="white"/>
+    </mask>
+  </defs>
+  <image href="mask-medium.svg?v=20260814j" width="220" height="220" mask="url(#cut)"/>
+</svg>
