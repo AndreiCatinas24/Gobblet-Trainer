@@ -3,11 +3,21 @@
 .piece.selected .mask-art.team-b.size-L{filter:drop-shadow(0 0 8px rgba(49,145,255,1)) drop-shadow(0 0 22px rgba(0,105,255,.92)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
 .piece.selected .mask-art.team-o.size-L{filter:drop-shadow(0 0 8px rgba(255,125,35,1)) drop-shadow(0 0 22px rgba(255,88,0,.92)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
 
-.mask-art.team-b.size-S{content:url('mask-small-clean.svg?v=20260814j')!important}
-.mask-art.team-o.size-S{content:url('mask-small-orange-clean.svg?v=20260814j')!important}
+/* Moroi: use the known-good source images directly. The previous nested-SVG wrapper is not Safari-safe. */
+.mask-art.team-b.size-S{content:url('mask-medium.svg?v=20260814k')!important}
+.mask-art.team-o.size-S{content:url('mask-small-orange.svg?v=20260814k')!important}
 
-.reserve-row.small .S{width:21%!important;height:auto!important;aspect-ratio:1/1!important;margin-right:2%!important}
-.reserve-row.small .S .mask-art{width:100%!important;height:100%!important;object-fit:contain!important;transform:scale(.94,.80);transform-origin:center center;filter:drop-shadow(0 0 5px rgba(49,145,255,.88)) drop-shadow(0 0 13px rgba(0,105,255,.56)) drop-shadow(0 7px 12px rgba(0,0,0,.42))}
+/* Build the Small piece as two layers: screened aura + clipped solid mask. This hides the square black background while keeping the black/white face intact. */
+.piece.S{isolation:isolate;overflow:visible}
+.piece.S::before{content:"";position:absolute;inset:-4%;z-index:0;background-repeat:no-repeat;background-position:center;background-size:contain;mix-blend-mode:screen;pointer-events:none}
+.piece.S:has(.mask-art.team-b)::before{background-image:url('mask-medium.svg?v=20260814k')}
+.piece.S:has(.mask-art.team-o)::before{background-image:url('mask-small-orange.svg?v=20260814k')}
+.piece.S::after{content:"S";position:absolute;right:5%;bottom:5%;z-index:3;width:24%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(5,11,23,.96);color:#fff;font:900 clamp(9px,2.2vw,15px)/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;border:2px solid #2f8fff;box-shadow:0 0 0 2px rgba(3,8,18,.55),0 0 12px rgba(45,137,255,.9);pointer-events:none}
+.piece.S:has(.mask-art.team-o)::after{border-color:#ff7a1a;box-shadow:0 0 0 2px rgba(3,8,18,.55),0 0 12px rgba(255,105,18,.9)}
+.piece.S .mask-art{position:relative;z-index:1;clip-path:ellipse(31% 43% at 50% 48%);object-fit:contain!important}
 
-.cell .piece.S{width:47%!important;height:50%!important;top:50%!important;bottom:auto!important;left:50%!important;transform:translate(-50%,-50%)!important}
-.cell .piece.S .mask-art{width:100%!important;height:100%!important;object-fit:contain!important;transform:none!important;transform-origin:center center}
+.reserve-row.small .S{width:24%!important;height:auto!important;aspect-ratio:1/1!important;margin-right:1.5%!important}
+.reserve-row.small .S .mask-art{width:100%!important;height:100%!important;transform:none!important;filter:drop-shadow(0 0 5px rgba(49,145,255,.82)) drop-shadow(0 7px 12px rgba(0,0,0,.42))}
+
+.cell .piece.S{width:50%!important;height:53%!important;top:50%!important;bottom:auto!important;left:50%!important;transform:translate(-50%,-50%)!important}
+.cell .piece.S .mask-art{width:100%!important;height:100%!important;transform:none!important;transform-origin:center center}
