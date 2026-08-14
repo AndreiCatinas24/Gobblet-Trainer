@@ -1,123 +1,26 @@
-.mask-art.team-b.size-L{content:url('mask-large.svg?v=20260814b');filter:drop-shadow(0 0 6px rgba(49,145,255,.98)) drop-shadow(0 0 18px rgba(0,105,255,.78)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
-.mask-art.team-o.size-L{content:url('mask-large-orange.svg?v=20260814b');filter:drop-shadow(0 0 6px rgba(255,125,35,.98)) drop-shadow(0 0 18px rgba(255,88,0,.78)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
+.mask-art.team-b.size-L{content:url('mask-large.svg?v=20260814p');filter:drop-shadow(0 0 6px rgba(49,145,255,.98)) drop-shadow(0 0 18px rgba(0,105,255,.78)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
+.mask-art.team-o.size-L{content:url('mask-large-orange.svg?v=20260814p');filter:drop-shadow(0 0 6px rgba(255,125,35,.98)) drop-shadow(0 0 18px rgba(255,88,0,.78)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
 .piece.selected .mask-art.team-b.size-L{filter:drop-shadow(0 0 8px rgba(49,145,255,1)) drop-shadow(0 0 22px rgba(0,105,255,.92)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
 .piece.selected .mask-art.team-o.size-L{filter:drop-shadow(0 0 8px rgba(255,125,35,1)) drop-shadow(0 0 22px rgba(255,88,0,.92)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
 
-/* Pricolici Medium: split the artwork into a screened aura and a solid clipped face.
-   The screen layer makes the square black background disappear, while the clipped
-   normal layer preserves the black half of the ritual mask. */
-.mask-art.team-b.size-M{content:url('mask-small.svg?v=20260814n')!important}
-.mask-art.team-o.size-M{content:url('mask-medium-orange.svg?v=20260814n')!important}
-.piece.M{overflow:visible;isolation:isolate}
-.piece.M::before{
-  content:"";
-  position:absolute;
-  inset:-5%;
-  z-index:0;
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-  mix-blend-mode:screen;
-  pointer-events:none;
-}
-.piece.M:has(.mask-art.team-b)::before{background-image:url('mask-small.svg?v=20260814n')}
-.piece.M:has(.mask-art.team-o)::before{background-image:url('mask-medium-orange.svg?v=20260814n')}
-.piece.M::after{
-  content:"M";
-  position:absolute;
-  right:5%;
-  bottom:5%;
-  z-index:3;
-  width:21%;
-  aspect-ratio:1;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:rgba(5,11,23,.97);
-  color:#fff;
-  font:900 clamp(10px,2.4vw,16px)/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;
-  border:2px solid #2f8fff;
-  box-shadow:0 0 0 2px rgba(3,8,18,.56),0 0 13px rgba(45,137,255,.92);
-  pointer-events:none;
-}
-.piece.M:has(.mask-art.team-o)::after{
-  border-color:#ff7a1a;
-  box-shadow:0 0 0 2px rgba(3,8,18,.56),0 0 13px rgba(255,105,18,.92)
-}
-.piece.M .mask-art{
-  position:relative;
-  z-index:1;
-  clip-path:polygon(27% 5%,73% 5%,80% 20%,80% 70%,72% 88%,59% 98%,41% 98%,28% 88%,20% 70%,20% 20%);
-  object-fit:contain!important
-}
+/* Pricolici Medium: real transparent assets, no black square and no CSS masking tricks. */
+.mask-art.team-b.size-M{content:url('mask-medium-transparent.svg?v=20260814p')!important;filter:drop-shadow(0 0 6px rgba(49,145,255,.92)) drop-shadow(0 0 16px rgba(0,105,255,.62)) drop-shadow(0 7px 12px rgba(0,0,0,.40))!important}
+.mask-art.team-o.size-M{content:url('mask-medium-orange-transparent.svg?v=20260814p')!important;filter:drop-shadow(0 0 6px rgba(255,125,35,.92)) drop-shadow(0 0 16px rgba(255,88,0,.62)) drop-shadow(0 7px 12px rgba(0,0,0,.40))!important}
+.piece.M{overflow:visible;isolation:auto}
+.piece.M::before,.piece.M::after{display:none!important;content:none!important}
+.piece.M .mask-art{position:relative;z-index:1;clip-path:none!important;object-fit:contain!important}
 
-/* Moroi Small: split the source into an aura layer and a tight physical-mask layer. */
-.mask-art.team-b.size-S{content:url('mask-medium.svg?v=20260814m')!important}
-.mask-art.team-o.size-S{content:url('mask-small-orange.svg?v=20260814m')!important}
-
+/* Moroi Small: keep the working layered treatment and the clear S badge. */
+.mask-art.team-b.size-S{content:url('mask-medium.svg?v=20260814p')!important}
+.mask-art.team-o.size-S{content:url('mask-small-orange.svg?v=20260814p')!important}
 .piece.S{overflow:visible}
-.piece.S::before{
-  content:"";
-  position:absolute;
-  inset:-6%;
-  z-index:0;
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-  mix-blend-mode:screen;
-  pointer-events:none;
-}
-.piece.S:has(.mask-art.team-b)::before{background-image:url('mask-medium.svg?v=20260814m')}
-.piece.S:has(.mask-art.team-o)::before{background-image:url('mask-small-orange.svg?v=20260814m')}
-.piece.S::after{
-  content:"S";
-  position:absolute;
-  right:5%;
-  bottom:5%;
-  z-index:3;
-  width:24%;
-  aspect-ratio:1;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:rgba(5,11,23,.96);
-  color:#fff;
-  font:900 clamp(9px,2.2vw,15px)/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;
-  border:2px solid #2f8fff;
-  box-shadow:0 0 0 2px rgba(3,8,18,.55),0 0 12px rgba(45,137,255,.9);
-  pointer-events:none;
-}
-.piece.S:has(.mask-art.team-o)::after{
-  border-color:#ff7a1a;
-  box-shadow:0 0 0 2px rgba(3,8,18,.55),0 0 12px rgba(255,105,18,.9);
-}
-/* The solid layer is clipped tightly around the face. The full aura comes from ::before. */
-.piece.S .mask-art{
-  position:relative;
-  z-index:1;
-  clip-path:polygon(34% 8%,66% 8%,72% 22%,72% 68%,65% 86%,56% 96%,44% 96%,35% 86%,28% 68%,28% 22%);
-  object-fit:contain!important;
-}
-
+.piece.S::before{content:"";position:absolute;inset:-6%;z-index:0;background-repeat:no-repeat;background-position:center;background-size:contain;mix-blend-mode:screen;pointer-events:none}
+.piece.S:has(.mask-art.team-b)::before{background-image:url('mask-medium.svg?v=20260814p')}
+.piece.S:has(.mask-art.team-o)::before{background-image:url('mask-small-orange.svg?v=20260814p')}
+.piece.S::after{content:"S";position:absolute;right:5%;bottom:5%;z-index:3;width:24%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(5,11,23,.96);color:#fff;font:900 clamp(9px,2.2vw,15px)/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;border:2px solid #2f8fff;box-shadow:0 0 0 2px rgba(3,8,18,.55),0 0 12px rgba(45,137,255,.9);pointer-events:none}
+.piece.S:has(.mask-art.team-o)::after{border-color:#ff7a1a;box-shadow:0 0 0 2px rgba(3,8,18,.55),0 0 12px rgba(255,105,18,.9)}
+.piece.S .mask-art{position:relative;z-index:1;clip-path:polygon(34% 8%,66% 8%,72% 22%,72% 68%,65% 86%,56% 96%,44% 96%,35% 86%,28% 68%,28% 22%);object-fit:contain!important}
 .reserve-row.small .S{width:24%!important;height:auto!important;aspect-ratio:1/1!important;margin-right:1.5%!important}
-.reserve-row.small .S .mask-art{
-  width:100%!important;
-  height:100%!important;
-  transform:none!important;
-  filter:drop-shadow(0 0 5px rgba(49,145,255,.82)) drop-shadow(0 7px 12px rgba(0,0,0,.42))
-}
-
-.cell .piece.S{
-  width:50%!important;
-  height:53%!important;
-  top:50%!important;
-  bottom:auto!important;
-  left:50%!important;
-  transform:translate(-50%,-50%)!important
-}
-.cell .piece.S .mask-art{
-  width:100%!important;
-  height:100%!important;
-  transform:none!important;
-  transform-origin:center center
-}
+.reserve-row.small .S .mask-art{width:100%!important;height:100%!important;transform:none!important;filter:drop-shadow(0 0 5px rgba(49,145,255,.82)) drop-shadow(0 7px 12px rgba(0,0,0,.42))}
+.cell .piece.S{width:50%!important;height:53%!important;top:50%!important;bottom:auto!important;left:50%!important;transform:translate(-50%,-50%)!important}
+.cell .piece.S .mask-art{width:100%!important;height:100%!important;transform:none!important;transform-origin:center center}
