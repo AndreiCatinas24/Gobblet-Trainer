@@ -78,6 +78,64 @@
   100%{transform:scale(1)}
 }
 
+/* Taunts displayed during the 3-second AI thinking delay. */
+.board{position:relative}
+.ai-taunt-stage{
+  position:absolute;
+  z-index:30;
+  left:5%;
+  right:5%;
+  top:35.5%;
+  height:28%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+.ai-taunt-card{
+  position:relative;
+  width:min(92%,470px);
+  padding:11px 14px 12px;
+  border-radius:16px;
+  text-align:center;
+  color:#fff;
+  background:linear-gradient(180deg,rgba(17,22,34,.96),rgba(6,10,18,.94));
+  border:1px solid rgba(255,142,58,.72);
+  box-shadow:0 12px 32px rgba(0,0,0,.44),0 0 22px rgba(255,104,20,.22),inset 0 1px rgba(255,255,255,.08);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  animation:tauntPop .22s cubic-bezier(.2,.9,.28,1);
+}
+.ai-taunt-card::after{
+  content:"";
+  position:absolute;
+  left:var(--taunt-x,50%);
+  bottom:-8px;
+  width:14px;
+  height:14px;
+  background:#090e18;
+  border-right:1px solid rgba(255,142,58,.72);
+  border-bottom:1px solid rgba(255,142,58,.72);
+  transform:translateX(-50%) rotate(45deg);
+}
+.ai-taunt-label{
+  display:block;
+  margin-bottom:4px;
+  color:#ff9c57;
+  font:800 10px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.ai-taunt-card strong{
+  display:block;
+  font:850 clamp(13px,3.2vw,17px)/1.22 -apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif;
+  letter-spacing:-.01em;
+}
+@keyframes tauntPop{
+  from{opacity:0;transform:translateY(8px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
 @media (prefers-reduced-motion:reduce){
-  .cell.ai-impact,.cell.ai-impact::before,.cell.ai-impact::after,.cell.ai-impact .mask-art{animation-duration:.01ms!important;animation-iteration-count:1!important}
+  .cell.ai-impact,.cell.ai-impact::before,.cell.ai-impact::after,.cell.ai-impact .mask-art,.ai-taunt-card{animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
