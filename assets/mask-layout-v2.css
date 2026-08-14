@@ -2,7 +2,12 @@
 .mask-art.team-o.size-L{content:url('mask-large-orange.svg?v=20260814b');filter:drop-shadow(0 0 6px rgba(255,125,35,.98)) drop-shadow(0 0 18px rgba(255,88,0,.78)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
 .piece.selected .mask-art.team-b.size-L{filter:drop-shadow(0 0 8px rgba(49,145,255,1)) drop-shadow(0 0 22px rgba(0,105,255,.92)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
 .piece.selected .mask-art.team-o.size-L{filter:drop-shadow(0 0 8px rgba(255,125,35,1)) drop-shadow(0 0 22px rgba(255,88,0,.92)) drop-shadow(0 7px 12px rgba(0,0,0,.42))!important}
+
+.mask-art.team-b.size-S{content:url('mask-small-clean.svg?v=20260814j')!important}
+.mask-art.team-o.size-S{content:url('mask-small-orange-clean.svg?v=20260814j')!important}
+
 .reserve-row.small .S{width:21%!important;height:auto!important;aspect-ratio:1/1!important;margin-right:2%!important}
 .reserve-row.small .S .mask-art{width:100%!important;height:100%!important;object-fit:contain!important;transform:scale(.94,.80);transform-origin:center center;filter:drop-shadow(0 0 5px rgba(49,145,255,.88)) drop-shadow(0 0 13px rgba(0,105,255,.56)) drop-shadow(0 7px 12px rgba(0,0,0,.42))}
-.cell .piece.S{width:35%!important;height:39%!important}
-.cell .piece.S .mask-art{transform:scale(.95,.82);transform-origin:center center}
+
+.cell .piece.S{width:47%!important;height:50%!important;top:50%!important;bottom:auto!important;left:50%!important;transform:translate(-50%,-50%)!important}
+.cell .piece.S .mask-art{width:100%!important;height:100%!important;object-fit:contain!important;transform:none!important;transform-origin:center center}
