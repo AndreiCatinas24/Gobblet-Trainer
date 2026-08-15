@@ -1,0 +1,11 @@
+.mask-instructions{margin:0 2px 14px;padding:11px 12px;border:1px solid rgba(119,183,255,.22);border-radius:16px;background:rgba(7,14,26,.48);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.mask-instructions .mask-instruction-copy{line-height:1.45}
+.mask-instructions .guide-word{display:inline-block;color:#aab8ca;transition:color .18s ease,text-shadow .18s ease,transform .18s ease}
+.reserve-title{scroll-margin-top:90px}
+.reserve-title.guide-title-pulse{animation:guideTitlePulse .72s ease-out}
+.reserve-groups.guide-glow .reserve-group{animation:guideGroupGlow 1.1s ease-out}
+.mask-instructions.guide-running .guide-word{animation:guideWordLight .46s ease both;animation-delay:calc(var(--i) * 125ms)}
+@keyframes guideWordLight{0%{color:#aab8ca;text-shadow:none;transform:translateY(0)}38%{color:#fff;text-shadow:0 0 8px rgba(110,168,255,.95),0 0 18px rgba(139,92,246,.65);transform:translateY(-1px) scale(1.035)}100%{color:#aab8ca;text-shadow:none;transform:translateY(0)}}
+@keyframes guideTitlePulse{0%{color:#fff;text-shadow:none}45%{color:#dcebff;text-shadow:0 0 12px rgba(77,148,255,.95),0 0 26px rgba(139,92,246,.45)}100%{color:#fff;text-shadow:none}}
+@keyframes guideGroupGlow{0%{border-color:rgba(104,158,255,.27);box-shadow:none}40%{border-color:rgba(110,168,255,.72);box-shadow:0 0 22px rgba(77,148,255,.24),inset 0 0 18px rgba(77,148,255,.08)}100%{border-color:rgba(104,158,255,.27);box-shadow:none}}
+@media(prefers-reduced-motion:reduce){.mask-instructions.guide-running .guide-word,.reserve-title.guide-title-pulse,.reserve-groups.guide-glow .reserve-group{animation-duration:.01ms!important;animation-delay:0ms!important}}
