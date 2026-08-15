@@ -7,30 +7,44 @@
   if(!board||!instruction||!title||!groups||!status)return;
 
   const copy=instruction.querySelector('.mask-instruction-copy');
-  if(copy){
+  if(copy&&!copy.querySelector('.guide-word')){
     const words=copy.textContent.trim().split(/\s+/);
     copy.innerHTML=words.map((word,i)=>`<span class="guide-word" style="--i:${i}">${word}</span>`).join(' ');
   }
 
-  let cleanupTimer=null;
-  function cueMasks(){
-    instruction.classList.remove('guide-running');
+  let cleanupTimer=null,startTimer=null;
+
+  function stopCue(){
+    clearTimeout(cleanupTimer);
+    clearTimeout(startTimer);
+    instruction.classList.remove('guide-running','guide-box-pulse');
     title.classList.remove('guide-title-pulse');
     groups.classList.remove('guide-glow');
-    void instruction.offsetWidth;
-    instruction.classList.add('guide-running');
-    title.classList.add('guide-title-pulse');
-    groups.classList.add('guide-glow');
-    title.scrollIntoView({behavior:'smooth',block:'start'});
-    clearTimeout(cleanupTimer);
-    cleanupTimer=setTimeout(()=>{
-      instruction.classList.remove('guide-running');
-      title.classList.remove('guide-title-pulse');
-      groups.classList.remove('guide-glow');
-    },3200);
   }
 
-  board.addEventListener('click',event=>{
+  function cueMasks(){
+    stopCue();
+    title.scrollIntoView({behavior:'smooth',block:'start'});
+
+    startTimer=setTimeout(()=>{
+      instruction.classList.remove('guide-running','guide-box-pulse');
+      title.classList.remove('guide-title-pulse');
+      groups.classList.remove('guide-glow');
+      void instruction.offsetWidth;
+
+      instruction.classList.add('guide-running','guide-box-pulse');
+      title.classList.add('guide-title-pulse');
+      groups.classList.add('guide-glow');
+
+      cleanupTimer=setTimeout(()=>{
+        instruction.classList.remove('guide-running','guide-box-pulse');
+        title.classList.remove('guide-title-pulse');
+        groups.classList.remove('guide-glow');
+      },4300);
+    },600);
+  }
+
+  board.addEventListener('pointerup',event=>{
     const cell=event.target.closest('.cell');
     if(!cell)return;
     if(event.target.closest('.piece'))return;
