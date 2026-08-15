@@ -41,4 +41,50 @@
       }
     }).observe(document.documentElement,{childList:true,subtree:true});
   }).catch(err=>console.warn('Transparent mask assets unavailable',err));
+
+  /* Mobile UX: tapping a board square before choosing a mask jumps to the reserve. */
+  const guideStyle=document.createElement('style');
+  guideStyle.textContent=`
+    .reserve-title{scroll-margin-top:18px}
+    .reserve-groups.choose-mask-prompt .reserve-group{
+      animation:chooseMaskPulse .72s ease-out 2;
+    }
+    @keyframes chooseMaskPulse{
+      0%,100%{box-shadow:0 0 0 rgba(65,145,255,0)}
+      45%{box-shadow:0 0 0 2px rgba(73,151,255,.72),0 0 26px rgba(34,112,255,.38)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .reserve-groups.choose-mask-prompt .reserve-group{animation:none!important;box-shadow:0 0 0 2px rgba(73,151,255,.62)}
+    }
+  `;
+  document.head.appendChild(guideStyle);
+
+  let guideTimer=null;
+  function guideToMasks(){
+    const title=document.querySelector('.reserve-title');
+    const groups=document.getElementById('reserveGroups');
+    if(!title||!groups)return;
+    title.scrollIntoView({behavior:'smooth',block:'start'});
+    groups.classList.remove('choose-mask-prompt');
+    void groups.offsetWidth;
+    groups.classList.add('choose-mask-prompt');
+    clearTimeout(guideTimer);
+    guideTimer=setTimeout(()=>groups.classList.remove('choose-mask-prompt'),1600);
+  }
+
+  document.addEventListener('click',e=>{
+    const cell=e.target.closest?.('.cell');
+    if(!cell)return;
+    const status=document.getElementById('status');
+    if(!status||status.textContent.trim()!=='Rândul tău')return;
+    if(document.querySelector('.piece.selected'))return;
+
+    const tappedPiece=e.target.closest?.('.piece');
+    /* A blue piece already on the board is itself a valid piece selection. */
+    if(tappedPiece&&tappedPiece.querySelector('.mask-art.team-b'))return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    guideToMasks();
+  },true);
 })();
