@@ -33,6 +33,7 @@
     "assets/regula-strigoi-1.js",
     "assets/regula-strigoi-1.css",
     "tests/regula_strigoi_1.test.js",
+    "tests/project-integrity.test.js",
     "rulesets/regula_strigoi_1.json"
   ],
   "rollback": {
