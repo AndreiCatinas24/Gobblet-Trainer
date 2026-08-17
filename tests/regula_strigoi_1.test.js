@@ -43,6 +43,19 @@ test('o piesa suficient de mare mutata de pe tabla poate bloca amenintarea',()=>
   assert.equal(result.ok,true);assert.equal(state.winner,null);assert.equal(state.pendingThreats.filter(t=>t.attacker==='b').length,0);
 });
 
+test('o aparare cu piesa de pe tabla pierde imediat daca ridicarea descopera linia adversarului',()=>{
+  const state=R.createState();
+  take(state,'o','oL1',0);take(state,'o','oL2',1);take(state,'o','oS2',2);take(state,'b','bL1',2);
+  take(state,'o','oM1',3);take(state,'o','oS1',4);take(state,'o','oM2',5);
+  state.pendingThreats=[{id:'o:3-4-5',attacker:'o',defender:'b',line:[3,4,5]}];
+  const candidate=R.legalMoves(state,'b').find(item=>item.kind==='b'&&item.id==='bL1'&&item.from===2&&item.to===3);
+  assert.ok(candidate);
+  const result=R.applyMove(state,candidate,'b');
+  assert.equal(result.ok,true);assert.equal(result.revealedWin,true);assert.equal(state.winner,'o');assert.equal(state.over,true);
+  assert.equal(R.top(state,2).id,'oS2');assert.equal(R.top(state,3).id,'oM1');
+  assert.ok(result.revealedLines.some(line=>line.join('-')==='0-1-2'));
+});
+
 test('piesele proprii pot merge pe liber sau peste o piesa proprie mai mica',()=>{
   const state=R.createState();
   take(state,'b','bM1',0);take(state,'b','bS1',1);
@@ -120,4 +133,3 @@ test('o linie mixta este presiune, nu victorie imediata',()=>{
   const next=R.cloneState(state);R.applyMove(next,move('r','bS2',null,2),'b');
   assert.equal(next.winner,null);assert.ok(R.scoreState(next,'b')>R.scoreState(state,'b'));
 });
-
