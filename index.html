@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="assets/mask-transparent.css?v=20260814s">
   <link rel="stylesheet" href="assets/defeat-popup-v2.css?v=20260814g">
   <link rel="stylesheet" href="assets/win-popup.css?v=20260815a">
-  <link rel="stylesheet" href="assets/regula-strigoi-1.css?v=20260817a">
+  <link rel="stylesheet" href="assets/regula-strigoi-1.css?v=20260817b">
 </head>
 <body>
   <div class="app">
@@ -46,18 +46,18 @@
     <section class="rules">
       <h2>Reguli de joc</h2>
       <ol>
-        <li>Fiecare jucător are 9 piese: 3 mici, 3 medii și 3 mari. În Arena Strigoilor ele se numesc Moroi, Pricolici și Strigoi.</li>
-        <li>O linie de 3 Strigoi vizibili de aceeași culoare câștigă instant.</li>
+        <li>Fiecare jucător are 6 piese: 2 mici, 2 medii și 2 mari. În Arena Strigoilor ele se numesc Moroi, Pricolici și Strigoi.</li>
+        <li>O linie completă de 3 piese vizibile de aceeași culoare care conține ambii Strigoi și încă o piesă proprie câștigă instant.</li>
         <li>La fiecare tură pui o piesă din rezervă sau muți o piesă proprie deja aflată pe tablă.</li>
         <li>Poți pune o piesă pe o căsuță liberă sau peste o piesă mai mică, inclusiv peste una proprie.</li>
         <li>O piesă mare poate acoperi una medie sau mică. Una medie poate acoperi doar una mică. O piesă mică nu poate acoperi nimic.</li>
         <li>Poți muta doar piesa vizibilă din vârful unui teanc.</li>
         <li>Piesele acoperite rămân în teanc și reapar când piesa de deasupra este mutată.</li>
         <li>O piesă de pe tablă se poate muta în orice altă căsuță legală, exceptând tura în care trebuie blocată o linie vulnerabilă.</li>
-        <li>Orice linie completă de 3 piese vizibile care conține un Moroi sau un Pricolici devine o linie vulnerabilă. Adversarul are exact următoarea sa tură pentru a o bloca.</li>
+        <li>Orice linie completă de 3 piese vizibile care nu conține ambii Strigoi devine o linie vulnerabilă. Adversarul are exact următoarea sa tură pentru a o bloca.</li>
         <li>Dacă o mutare descoperă o linie vulnerabilă a adversarului, apărătorul acelei linii este înregistrat explicit, iar termenul expiră la următoarea lui tură, nu în momentul descoperirii.</li>
         <li>O linie vulnerabilă se blochează numai cu o piesă suficient de mare venită din rezervă, așezată peste o piesă non-Strigoi a liniei. Dacă expiră mai multe amenințări în aceeași tură, aceeași mutare trebuie să le blocheze pe toate; altfel atacatorul câștigă.</li>
-        <li>La o mutare de apărare se rezolvă mai întâi amenințările existente și abia apoi se verifică liniile noi. Dacă blocajul legal formează pentru apărător o linie de 3 Strigoi, apărătorul câștigă instant.</li>
+        <li>La o mutare de apărare se rezolvă mai întâi amenințările existente și abia apoi se verifică liniile noi. Dacă blocajul legal formează pentru apărător o linie completă care conține ambii săi Strigoi, apărătorul câștigă instant.</li>
         <li>Butonul „Mutarea optimă” nu joacă automat. Selectează piesa recomandată și evidențiază destinația cu mov.</li>
       </ol>
     </section>
@@ -65,8 +65,8 @@
   <div id="fireworks"></div>
   <div id="loseOverlay" class="overlay"><div class="popup"><img src="defeat.svg?v=20260814g" alt=""><h3>Ai fost învins</h3><p>Viața e grea Boss</p><button id="closePopup">Închide</button></div></div>
   <script src="assets/mask-assets.js?v=20260815b"></script>
-  <script src="assets/regula-strigoi-1.js?v=20260817a"></script>
-  <script src="assets/apple.js?v=20260817c"></script>
+  <script src="assets/regula-strigoi-1.js?v=20260817b"></script>
+  <script src="assets/apple.js?v=20260817d"></script>
   <script src="assets/mask-guide.js?v=20260815b"></script>
   <script src="assets/win-popup-hook.js?v=20260815a"></script>
   <script src="assets/defeat-sticker.js?v=20260814g"></script>

@@ -8,8 +8,9 @@ Joc web inspirat de Gobblet Gobblers, cu piese tematice românești și un adver
 
 ## Regulile speciale `regula_strigoi_1`
 
-- Trei Strigoi vizibili de aceeași culoare câștigă instant.
-- O linie completă care conține un Moroi sau un Pricolici devine vulnerabilă.
+- Fiecare jucător are 6 piese: 2 Strigoi, 2 Pricolici și 2 Moroi.
+- O linie completă care conține ambii Strigoi și încă o piesă proprie câștigă instant.
+- O linie completă care nu conține ambii Strigoi devine vulnerabilă.
 - Apărătorul are exact următoarea sa tură pentru blocaj.
 - Blocajul se face numai cu o piesă suficient de mare venită din rezervă, peste o piesă non-Strigoi din linie.
 - O singură mutare trebuie să blocheze toate amenințările care expiră în aceeași tură.

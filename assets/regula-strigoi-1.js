@@ -10,7 +10,7 @@
 
   function other(color){return color==='b'?'o':'b';}
   function pieces(color){
-    return ['L1','L2','L3','M1','M2','M3','S1','S2','S3'].map(code=>({id:color+code,color,size:code[0]}));
+    return ['L1','L2','M1','M2','S1','S2'].map(code=>({id:color+code,color,size:code[0]}));
   }
   function createState(){
     return{board:Array.from({length:9},()=>[]),reserve:{b:pieces('b'),o:pieces('o')},turn:'b',pendingThreats:[],winner:null,over:false};
@@ -40,15 +40,15 @@
   function lineKey(attacker,line){return `${attacker}:${line.join('-')}`;}
   function visibleLine(state,line,color){return line.every(index=>{const piece=top(state,index);return piece&&piece.color===color;});}
   function completeLines(state,color){return LINES.filter(line=>visibleLine(state,line,color));}
-  function mixedLines(state,color){
-    return completeLines(state,color).filter(line=>line.some(index=>top(state,index).size!=='L'));
+  function vulnerableLines(state,color){
+    return completeLines(state,color).filter(line=>line.filter(index=>top(state,index).size==='L').length<2);
   }
-  function allLargeLine(state,line,color){
-    return visibleLine(state,line,color)&&line.every(index=>top(state,index).size==='L');
+  function hasBothStrigoi(state,line,color){
+    return visibleLine(state,line,color)&&line.filter(index=>top(state,index).size==='L').length>=2;
   }
-  function largeWinner(state,preferredColor){
+  function instantWinner(state,preferredColor){
     const colors=preferredColor?[preferredColor,other(preferredColor)]:['b','o'];
-    for(const color of colors)if(LINES.some(line=>allLargeLine(state,line,color)))return color;
+    for(const color of colors)if(LINES.some(line=>hasBothStrigoi(state,line,color)))return color;
     return null;
   }
   function isThreatIntact(state,threat){return visibleLine(state,threat.line,threat.attacker);}
@@ -95,7 +95,7 @@
     const existing=new Set(state.pendingThreats.map(threat=>lineKey(threat.attacker,threat.line)));
     const created=[];
     for(const attacker of['b','o']){
-      for(const line of mixedLines(state,attacker)){
+      for(const line of vulnerableLines(state,attacker)){
         const key=lineKey(attacker,line);
         if(existing.has(key))continue;
         const threat={id:key,attacker,defender:other(attacker),line:[...line]};
@@ -136,7 +136,7 @@
     const expiringIds=new Set(expiring.map(threat=>threat.id));
     state.pendingThreats=state.pendingThreats.filter(threat=>!expiringIds.has(threat.id)&&isThreatIntact(state,threat));
 
-    const instant=largeWinner(state,color);
+    const instant=instantWinner(state,color);
     if(instant){
       setWinner(state,instant);
       return{ok:true,winner:instant,createdThreats:[]};
@@ -214,6 +214,6 @@
     return{m:best,v:bestValue};
   }
 
-  return{SIZE,LINES,other,pieces,createState,cloneState,loadState,resetState,top,completeLines,mixedLines,largeWinner,isThreatIntact,pendingFor,basicMoves,isLegalBlockMove,legalMoves,applyMove,nearLines,scoreState,immediateWin,bestMove};
+  return{SIZE,LINES,other,pieces,createState,cloneState,loadState,resetState,top,completeLines,vulnerableLines,mixedLines:vulnerableLines,hasBothStrigoi,instantWinner,allLargeLine:hasBothStrigoi,largeWinner:instantWinner,isThreatIntact,pendingFor,basicMoves,isLegalBlockMove,legalMoves,applyMove,nearLines,scoreState,immediateWin,bestMove};
 });
 

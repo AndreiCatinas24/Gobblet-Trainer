@@ -3,7 +3,7 @@
 const E=window.RegulaStrigoi1;
 if(!E)throw new Error('regula_strigoi_1 engine is missing');
 const IMG={b:{L:'assets/mask-large.svg',M:'assets/mask-medium-transparent.svg',S:'assets/mask-medium.svg'},o:{L:'assets/mask-large-orange.svg',M:'assets/mask-medium-orange-transparent.svg',S:'assets/mask-small-orange.svg'}};
-const TYPE_NAME={S:'Moroi',M:'Pricolici',L:'Strigoi'},TYPE_DESC={L:'măști mari',M:'măști medii',S:'măști mici'};
+const TYPE_NAME={S:'Moroi',M:'Pricolici',L:'Strigoi'},PIECES_PER_SIZE=2;
 const TAUNTS=['Mama ta știe ce faci?','Ești de belea, vai de mama ta.','Nu mai plânge! Nu mai suferi!','Ai în cap loc doar pentru manele.','Cred că e nevoie să închizi Pornhub.','Ești slab la minte, dar ai alte calități.','Cine te recomandă? Mama ta?','Atât de slab nu am mai văzut.','De asta nu ne vizitează extratereștrii.','Mai bine joci Bambilici cu copiii.','Lasă-te, că nu e de tine.'];
 let game,selected,history,log,hintMove=null,impactCell=null,aiTimer=null,impactTimer=null,lastTaunt=-1;
 const $=id=>document.getElementById(id),top=i=>E.top(game,i),name=color=>color==='b'?'albastru':'portocaliu';
@@ -75,9 +75,9 @@ function groupTemplate(title,subtitle,cssClass,piecesList){
 function renderReserve(){
   const groups=$('reserveGroups');groups.innerHTML='';
   const sorted={L:game.reserve.b.filter(piece=>piece.size==='L'),M:game.reserve.b.filter(piece=>piece.size==='M'),S:game.reserve.b.filter(piece=>piece.size==='S')};
-  groups.appendChild(groupTemplate('Strigoi',TYPE_DESC.L,'large',sorted.L));
-  groups.appendChild(groupTemplate('Pricolici',TYPE_DESC.M,'medium',sorted.M));
-  groups.appendChild(groupTemplate('Moroi',TYPE_DESC.S,'small',sorted.S));
+  groups.appendChild(groupTemplate('Strigoi',`${sorted.L.length}/${PIECES_PER_SIZE} în rezervă`,'large',sorted.L));
+  groups.appendChild(groupTemplate('Pricolici',`${sorted.M.length}/${PIECES_PER_SIZE} în rezervă`,'medium',sorted.M));
+  groups.appendChild(groupTemplate('Moroi',`${sorted.S.length}/${PIECES_PER_SIZE} în rezervă`,'small',sorted.S));
 }
 function renderThreatBanner(){
   const banner=$('threatBanner');if(!banner)return;
@@ -134,7 +134,7 @@ function ai(){
   try{if(navigator.vibrate)navigator.vibrate(35);}catch(error){}
   if(result.winner){msg(`AI a jucat ${desc(best)}. Lovitură decisivă.`);render();impactTimer=setTimeout(()=>{impactTimer=null;impactCell=null;finish(result.winner);},900);return;}
   const due=dueThreats('b');
-  msg(due.length?`AI a jucat ${desc(best)}. Ai o singură tură pentru a bloca ${due.length===1?'linia vulnerabilă':'toate liniile vulnerabile'}.`:`AI a jucat ${desc(best)}. Verifică dacă poți crea o linie vulnerabilă sau trei Strigoi.`);
+  msg(due.length?`AI a jucat ${desc(best)}. Ai o singură tură pentru a bloca ${due.length===1?'linia vulnerabilă':'toate liniile vulnerabile'}.`:`AI a jucat ${desc(best)}. Verifică dacă poți crea o linie vulnerabilă sau o linie cu ambii Strigoi.`);
   render();impactTimer=setTimeout(()=>{impactTimer=null;impactCell=null;render();},900);
 }
 function hint(){
@@ -162,7 +162,7 @@ function finish(winner){
 function reset(){
   clearTimers();game=E.createState();selected=null;history=[];log=[];hintMove=null;impactCell=null;$('loseOverlay').classList.remove('show');
   $('hintBox').textContent='„Mutarea optimă” selectează piesa recomandată și marchează cu mov căsuța recomandată. Tu confirmi mutarea.';
-  msg('Selectează o mască albastră din rezervă. Doar trei Strigoi câștigă instant; o linie mixtă devine vulnerabilă.');render();
+  msg('Selectează una dintre cele 6 măști albastre. O linie cu ambii Strigoi câștigă instant; celelalte linii complete devin vulnerabile.');render();
 }
 $('hint').onclick=hint;$('analyze').onclick=analyze;$('undo').onclick=undo;$('newgame').onclick=reset;$('closePopup').onclick=()=>$('loseOverlay').classList.remove('show');$('loseOverlay').onclick=event=>{if(event.target===$('loseOverlay'))$('loseOverlay').classList.remove('show');};reset();
 })();

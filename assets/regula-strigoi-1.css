@@ -8,6 +8,7 @@
 .reserve-row .piece.defense-option{filter:drop-shadow(0 0 8px rgba(49,211,155,.95));animation:defenseOptionPulse 1s ease-in-out infinite}
 .reserve-row .piece.defense-unavailable{opacity:.28;filter:grayscale(.7)}
 .reserve-row .piece[role="button"]:focus-visible{outline:3px solid #72e4ff;outline-offset:3px;border-radius:14px}
+.reserve-row{justify-content:center}
 @keyframes vulnerableCellPulse{0%,100%{filter:saturate(1)}50%{filter:saturate(1.35) brightness(1.12)}}
 @keyframes threatBannerPulse{0%,100%{transform:scale(1);box-shadow:0 0 18px rgba(255,76,35,.18)}50%{transform:scale(1.012);box-shadow:0 0 30px rgba(255,76,35,.38)}}
 @keyframes defenseOptionPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 7px rgba(49,211,155,.75))}50%{transform:scale(1.045);filter:drop-shadow(0 0 15px rgba(49,211,155,1))}}

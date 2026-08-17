@@ -64,7 +64,9 @@ test('toate regulile speciale sunt scrise in pagina',()=>{
   const html=read('index.html');
   assert.equal((html.match(/<li>/g)||[]).length,13);
   for(const phrase of[
-    '3 Strigoi vizibili',
+    '6 piese: 2 mici, 2 medii și 2 mari',
+    'conține ambii Strigoi și încă o piesă proprie',
+    'nu conține ambii Strigoi',
     'exact următoarea sa tură',
     'piesă suficient de mare venită din rezervă',
     'aceeași mutare trebuie să le blocheze pe toate',
