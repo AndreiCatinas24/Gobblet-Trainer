@@ -1,0 +1,14 @@
+.threat-banner{margin:0 0 14px;padding:12px 14px;border:1px solid rgba(255,190,68,.7);border-radius:16px;background:linear-gradient(135deg,rgba(100,54,8,.88),rgba(70,31,7,.84));color:#fff4cf;font-weight:850;line-height:1.35;box-shadow:0 0 24px rgba(255,157,28,.18)}
+.threat-banner[hidden]{display:none!important}
+.threat-banner.is-due{border-color:#ff6d3a;background:linear-gradient(135deg,rgba(132,35,12,.94),rgba(77,16,13,.92));color:#fff;animation:threatBannerPulse 1.05s ease-in-out infinite}
+.cell.vulnerable{z-index:1;animation:vulnerableCellPulse 1.25s ease-in-out infinite}
+.cell.vulnerable-b{box-shadow:0 0 0 4px rgba(83,163,255,.88),0 0 26px rgba(57,139,255,.72),inset 0 0 0 3px rgba(255,255,255,.34)}
+.cell.vulnerable-o{box-shadow:0 0 0 4px rgba(255,108,42,.9),0 0 26px rgba(255,89,24,.74),inset 0 0 0 3px rgba(255,245,225,.38)}
+.cell.threat-due{outline:4px dashed #fff4c2;outline-offset:-9px}
+.reserve-row .piece.defense-option{filter:drop-shadow(0 0 8px rgba(49,211,155,.95));animation:defenseOptionPulse 1s ease-in-out infinite}
+.reserve-row .piece.defense-unavailable{opacity:.28;filter:grayscale(.7)}
+@keyframes vulnerableCellPulse{0%,100%{filter:saturate(1)}50%{filter:saturate(1.35) brightness(1.12)}}
+@keyframes threatBannerPulse{0%,100%{transform:scale(1);box-shadow:0 0 18px rgba(255,76,35,.18)}50%{transform:scale(1.012);box-shadow:0 0 30px rgba(255,76,35,.38)}}
+@keyframes defenseOptionPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 7px rgba(49,211,155,.75))}50%{transform:scale(1.045);filter:drop-shadow(0 0 15px rgba(49,211,155,1))}}
+@media (prefers-reduced-motion:reduce){.threat-banner.is-due,.cell.vulnerable,.reserve-row .piece.defense-option{animation:none!important}}
+
