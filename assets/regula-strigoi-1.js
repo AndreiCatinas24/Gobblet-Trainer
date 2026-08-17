@@ -40,9 +40,7 @@
   function lineKey(attacker,line){return `${attacker}:${line.join('-')}`;}
   function visibleLine(state,line,color){return line.every(index=>{const piece=top(state,index);return piece&&piece.color===color;});}
   function completeLines(state,color){return LINES.filter(line=>visibleLine(state,line,color));}
-  function vulnerableLines(state,color){
-    return completeLines(state,color);
-  }
+  function vulnerableLines(state,color){return completeLines(state,color);}
   function isThreatIntact(state,threat){return visibleLine(state,threat.line,threat.attacker);}
   function pendingFor(state,defender){return(state.pendingThreats||[]).filter(threat=>threat.defender===defender&&isThreatIntact(state,threat));}
 
@@ -108,6 +106,9 @@
     }
     state.board[move.to].push(piece);
   }
+  function newlyRevealedLines(state,color,beforeKeys){
+    return completeLines(state,color).filter(line=>!beforeKeys.has(line.join('-')));
+  }
   function adjudicateNoDefense(state){
     if(state.over)return;
     const due=pendingFor(state,state.turn);
@@ -118,10 +119,24 @@
     const allowed=legalMoves(state,color);
     if(!allowed.some(candidate=>moveMatches(candidate,move)))return{ok:false,reason:pendingFor(state,color).length?'must-block-all':'illegal-move'};
     const expiring=pendingFor(state,color);
-    applyUnchecked(state,move,color);
+
+    if(expiring.length&&move.kind==='b'){
+      const opponent=other(color);
+      const beforeOpponentLines=new Set(completeLines(state,opponent).map(line=>line.join('-')));
+      const piece=state.board[move.from].pop();
+      const revealedLines=newlyRevealedLines(state,opponent,beforeOpponentLines);
+      if(revealedLines.length){
+        setWinner(state,opponent);
+        return{ok:true,winner:opponent,createdThreats:[],revealedWin:true,revealedLines:revealedLines.map(line=>[...line]),liftedPiece:piece};
+      }
+      state.board[move.to].push(piece);
+    }else{
+      applyUnchecked(state,move,color);
+    }
 
     if(expiring.some(threat=>isThreatIntact(state,threat))){
-      setWinner(state,expiring.find(threat=>isThreatIntact(state,threat)).attacker);
+      const surviving=expiring.find(threat=>isThreatIntact(state,threat));
+      setWinner(state,surviving.attacker);
       return{ok:true,winner:state.winner,createdThreats:[]};
     }
 
@@ -202,4 +217,3 @@
 
   return{SIZE,LINES,other,pieces,createState,cloneState,loadState,resetState,top,completeLines,vulnerableLines,mixedLines:vulnerableLines,isThreatIntact,pendingFor,basicMoves,isLegalBlockMove,legalMoves,applyMove,nearLines,scoreState,immediateWin,bestMove};
 });
-
