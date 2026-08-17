@@ -62,11 +62,12 @@ test('piesele pot fi folosite corect cu touch mouse si tastatura',()=>{
   assert.ok(ui.includes("event.key==='Enter'||event.key===' '"));
   assert.ok(css.includes('.cell.vulnerable-b,.cell.vulnerable-o'));
   assert.ok(css.includes('rgba(255,54,54,.94)'));
+  assert.ok(css.includes('content:"MUTĂ"'));
 });
 
 test('toate regulile speciale sunt scrise in pagina',()=>{
   const html=read('index.html');
-  assert.equal((html.match(/<li>/g)||[]).length,13);
+  assert.equal((html.match(/<li>/g)||[]).length,14);
   for(const phrase of[
     '6 piese: 2 mici, 2 medii și 2 mari',
     'nu câștigă instant',
@@ -76,7 +77,8 @@ test('toate regulile speciale sunt scrise in pagina',()=>{
     'exact următoarea sa tură',
     'piesă suficient de mare luată din rezervă sau mutată de pe tablă',
     'aceeași mutare trebuie să le rupă pe toate',
-    'se rezolvă mai întâi liniile roșii existente',
+    'ea este ridicată mai întâi',
+    'adversarul câștigă imediat',
     'nu victorie instant'
   ])assert.ok(html.includes(phrase),`Regula lipseste: ${phrase}`);
 });
