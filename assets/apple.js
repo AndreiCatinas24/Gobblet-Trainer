@@ -34,7 +34,7 @@ function renderBoard(){
     const piece=selected.kind==='r'?game.reserve.b.find(item=>item.id===selected.id):top(selected.from);
     if(piece)legal=legalDestinations(piece.id,selected.from);
   }
-  const marked=threatCells(),board=$('board');
+  const marked=threatCells(),board=$('board'),defenseMoves=dueThreats('b').length?moves('b').filter(move=>move.kind==='b'):[];
   board.innerHTML='';
   for(let index=0;index<9;index++){
     const cell=document.createElement('button');
@@ -46,7 +46,7 @@ function renderBoard(){
     cell.setAttribute('aria-label',piece?`Căsuța ${index+1}: ${TYPE_NAME[piece.size]} ${name(piece.color)}, teanc de ${game.board[index].length}`:`Căsuța ${index+1}: liberă`);
     if(piece){
       const node=document.createElement('div');
-      node.className=`piece ${piece.size}${selected&&selected.id===piece.id?' selected':''}`;
+      node.className=`piece ${piece.size}${selected&&selected.id===piece.id?' selected':''}${defenseMoves.some(move=>move.from===index)?' board-defense-option':''}`;
       node.innerHTML=pieceHTML(piece);
       node.onclick=event=>{event.stopPropagation();if(piece.color==='b'&&!selected)selectBoard(index);else playTo(index);};
       cell.appendChild(node);
@@ -87,14 +87,14 @@ function renderThreatBanner(){
   banner.hidden=false;
   banner.className=`threat-banner${due.length?' is-due':''}`;
   if(due.length){
-    banner.textContent=game.turn==='b'?`AMENINȚARE: blochează ${due.length===1?'linia vulnerabilă':'toate liniile vulnerabile'} cu o mască din rezervă.`:`AI trebuie să blocheze ${due.length===1?'linia vulnerabilă':'toate liniile vulnerabile'} în această tură.`;
+    banner.textContent=game.turn==='b'?`APROAPE CÂȘTIG: rupe ${due.length===1?'linia roșie':'toate liniile roșii'} cu o mască potrivită din rezervă sau de pe tablă.`:`AI trebuie să rupă ${due.length===1?'linia roșie':'toate liniile roșii'} în această tură.`;
   }else{
-    banner.textContent=`${pending.length} ${pending.length===1?'linie vulnerabilă activă':'linii vulnerabile active'}. Conturul pulsatoriu arată căsuțele implicate.`;
+    banner.textContent=`${pending.length} ${pending.length===1?'linie aproape câștigătoare':'linii aproape câștigătoare'}. Conturul roșu arată căsuțele implicate.`;
   }
 }
 function render(){
   const due=dueThreats();
-  $('status').textContent=game.over?(game.winner==='b'?'Ai câștigat':'AI a câștigat'):(due.length?(game.turn==='b'?'AMENINȚARE — trebuie să blochezi':'AI blochează amenințarea'):(game.turn==='b'?'Rândul tău':'AI gândește...'));
+  $('status').textContent=game.over?(game.winner==='b'?'Ai câștigat':'AI a câștigat'):(due.length?(game.turn==='b'?'APROAPE CÂȘTIG — rupe linia roșie':'AI apără linia roșie'):(game.turn==='b'?'Rândul tău':'AI gândește...'));
   renderThreatBanner();renderBoard();renderReserve();
   $('mine').textContent=activeThreats('b').length;$('theirs').textContent=activeThreats('o').length;$('eval').textContent=E.scoreState(game,'b');
   const rows=$('historyRows');rows.innerHTML='';
@@ -103,25 +103,27 @@ function render(){
 function selectReserve(id){
   if(game.turn!=='b'||game.over)return;
   const piece=game.reserve.b.find(item=>item.id===id);if(!piece)return;
-  if(!moves('b').some(move=>move.id===id)){msg('În această tură trebuie să blochezi toate liniile vulnerabile cu o singură piesă potrivită din rezervă.');return;}
+  if(!moves('b').some(move=>move.id===id)){msg('În această tură trebuie să rupi toate liniile roșii cu o singură piesă potrivită din rezervă sau de pe tablă.');return;}
   selected={kind:'r',id:piece.id,size:piece.size,from:null};render();
 }
 function selectBoard(index){
   if(game.turn!=='b'||game.over)return;
-  if(dueThreats('b').length){msg('Blocajul este legal doar cu o piesă venită din rezervă.');return;}
-  const piece=top(index);if(piece&&piece.color==='b'){selected={kind:'b',id:piece.id,size:piece.size,from:index};render();}
+  const piece=top(index);if(piece&&piece.color==='b'){
+    if(dueThreats('b').length&&!moves('b').some(move=>move.kind==='b'&&move.from===index)){msg('Această piesă nu poate rupe toate liniile roșii. Alege una evidențiată sau o piesă potrivită din rezervă.');return;}
+    selected={kind:'b',id:piece.id,size:piece.size,from:index};render();
+  }
 }
 function playTo(index){
   if(game.turn!=='b'||game.over||!selected)return;
   const candidates=moves('b'),chosen=candidates.find(move=>move.id===selected.id&&move.from===selected.from&&move.to===index);
-  if(!chosen){msg(dueThreats('b').length?'Blocaj ilegal. Folosește o piesă suficient de mare din rezervă, pe o căsuță vulnerabilă comună tuturor amenințărilor.':'Mutare ilegală. O piesă poate acoperi doar o piesă mai mică.');return;}
+  if(!chosen){msg(dueThreats('b').length?'Blocaj ilegal. Folosește o piesă suficient de mare din rezervă sau de pe tablă, pe o căsuță comună tuturor liniilor roșii.':'Mutare ilegală. O piesă poate acoperi doar o piesă mai mică.');return;}
   const before=clone(),recommendation=E.bestMove(game,'b').m;
   history.push({state:before,log:JSON.parse(JSON.stringify(log))});
   const result=E.applyMove(game,chosen,'b');
   selected=null;hintMove=null;log.push({b:desc(chosen),o:''});
   if(result.winner){finish(result.winner);return;}
   const created=result.createdThreats.filter(threat=>threat.attacker==='b').length;
-  if(created)msg(`${created===1?'Linie vulnerabilă creată':'Linii vulnerabile create'}. AI are exact această tură pentru a ${created===1?'o':'le'} bloca.`);
+  if(created)msg(`${created===1?'Linie aproape câștigătoare creată':'Linii aproape câștigătoare create'}. AI are exact această tură pentru a ${created===1?'o':'le'} rupe.`);
   else msg(desc(chosen)===desc(recommendation)?`Foarte bine. ${desc(chosen)} este recomandarea motorului.`:`Ai jucat ${desc(chosen)}. Motorul preferă ${desc(recommendation)}.`);
   $('hintBox').textContent=`Ultima ta mutare: ${desc(chosen)}. AI răspunde în 3 secunde.`;
   render();showTaunt();if(aiTimer)clearTimeout(aiTimer);aiTimer=setTimeout(()=>{aiTimer=null;ai();},3000);
@@ -134,7 +136,7 @@ function ai(){
   try{if(navigator.vibrate)navigator.vibrate(35);}catch(error){}
   if(result.winner){msg(`AI a jucat ${desc(best)}. Lovitură decisivă.`);render();impactTimer=setTimeout(()=>{impactTimer=null;impactCell=null;finish(result.winner);},900);return;}
   const due=dueThreats('b');
-  msg(due.length?`AI a jucat ${desc(best)}. Ai o singură tură pentru a bloca ${due.length===1?'linia vulnerabilă':'toate liniile vulnerabile'}.`:`AI a jucat ${desc(best)}. Verifică dacă poți crea o linie vulnerabilă sau o linie cu ambii Strigoi.`);
+  msg(due.length?`AI a jucat ${desc(best)}. Ai o singură tură pentru a rupe ${due.length===1?'linia roșie':'toate liniile roșii'}.`:`AI a jucat ${desc(best)}. Încearcă să creezi o linie aproape câștigătoare.`);
   render();impactTimer=setTimeout(()=>{impactTimer=null;impactCell=null;render();},900);
 }
 function hint(){
@@ -162,7 +164,7 @@ function finish(winner){
 function reset(){
   clearTimers();game=E.createState();selected=null;history=[];log=[];hintMove=null;impactCell=null;$('loseOverlay').classList.remove('show');
   $('hintBox').textContent='„Mutarea optimă” selectează piesa recomandată și marchează cu mov căsuța recomandată. Tu confirmi mutarea.';
-  msg('Selectează una dintre cele 6 măști albastre. O linie cu ambii Strigoi câștigă instant; celelalte linii complete devin vulnerabile.');render();
+  msg('Selectează una dintre cele 6 măști albastre. Orice linie completă devine roșie și trebuie apărată de adversar în următoarea sa tură.');render();
 }
 $('hint').onclick=hint;$('analyze').onclick=analyze;$('undo').onclick=undo;$('newgame').onclick=reset;$('closePopup').onclick=()=>$('loseOverlay').classList.remove('show');$('loseOverlay').onclick=event=>{if(event.target===$('loseOverlay'))$('loseOverlay').classList.remove('show');};reset();
 })();

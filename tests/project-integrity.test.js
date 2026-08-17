@@ -54,10 +54,14 @@ test('pagina canonica incarca motorul in ordinea corecta si toate resursele exis
 
 test('piesele pot fi folosite corect cu touch mouse si tastatura',()=>{
   const ui=read('assets/apple.js');
+  const css=read('assets/regula-strigoi-1.css');
   assert.ok(ui.includes("if(piece.color==='b'&&!selected)selectBoard(index);else playTo(index);"));
+  assert.ok(ui.includes("' board-defense-option'"));
   assert.ok(ui.includes("node.setAttribute('role','button')"));
   assert.ok(ui.includes('node.tabIndex=0'));
   assert.ok(ui.includes("event.key==='Enter'||event.key===' '"));
+  assert.ok(css.includes('.cell.vulnerable-b,.cell.vulnerable-o'));
+  assert.ok(css.includes('rgba(255,54,54,.94)'));
 });
 
 test('toate regulile speciale sunt scrise in pagina',()=>{
@@ -65,13 +69,15 @@ test('toate regulile speciale sunt scrise in pagina',()=>{
   assert.equal((html.match(/<li>/g)||[]).length,13);
   for(const phrase of[
     '6 piese: 2 mici, 2 medii și 2 mari',
-    'conține ambii Strigoi și încă o piesă proprie',
-    'nu conține ambii Strigoi',
+    'nu câștigă instant',
+    'evidențiată cu roșu',
+    'din rezervă sau mutată de pe tablă',
+    'inclusiv peste una de aceeași culoare',
     'exact următoarea sa tură',
-    'piesă suficient de mare venită din rezervă',
-    'aceeași mutare trebuie să le blocheze pe toate',
-    'se rezolvă mai întâi amenințările existente',
-    'apărătorul câștigă instant'
+    'piesă suficient de mare luată din rezervă sau mutată de pe tablă',
+    'aceeași mutare trebuie să le rupă pe toate',
+    'se rezolvă mai întâi liniile roșii existente',
+    'nu victorie instant'
   ])assert.ok(html.includes(phrase),`Regula lipseste: ${phrase}`);
 });
 

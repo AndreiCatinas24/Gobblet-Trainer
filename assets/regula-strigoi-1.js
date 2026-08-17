@@ -41,15 +41,7 @@
   function visibleLine(state,line,color){return line.every(index=>{const piece=top(state,index);return piece&&piece.color===color;});}
   function completeLines(state,color){return LINES.filter(line=>visibleLine(state,line,color));}
   function vulnerableLines(state,color){
-    return completeLines(state,color).filter(line=>line.filter(index=>top(state,index).size==='L').length<2);
-  }
-  function hasBothStrigoi(state,line,color){
-    return visibleLine(state,line,color)&&line.filter(index=>top(state,index).size==='L').length>=2;
-  }
-  function instantWinner(state,preferredColor){
-    const colors=preferredColor?[preferredColor,other(preferredColor)]:['b','o'];
-    for(const color of colors)if(LINES.some(line=>hasBothStrigoi(state,line,color)))return color;
-    return null;
+    return completeLines(state,color);
   }
   function isThreatIntact(state,threat){return visibleLine(state,threat.line,threat.attacker);}
   function pendingFor(state,defender){return(state.pendingThreats||[]).filter(threat=>threat.defender===defender&&isThreatIntact(state,threat));}
@@ -75,9 +67,9 @@
   }
   function moveMatches(a,b){return a&&b&&a.kind===b.kind&&a.id===b.id&&a.from===b.from&&a.to===b.to;}
   function isLegalBlockMove(state,move,threats,color){
-    if(!threats.length||move.kind!=='r')return false;
-    const piece=state.reserve[color].find(candidate=>candidate.id===move.id);
-    if(!piece)return false;
+    if(!threats.length)return false;
+    const piece=move.kind==='r'?state.reserve[color].find(candidate=>candidate.id===move.id):top(state,move.from);
+    if(!piece||piece.color!==color)return false;
     return threats.every(threat=>{
       if(threat.defender!==color||!threat.line.includes(move.to))return false;
       const target=top(state,move.to);
@@ -135,12 +127,6 @@
 
     const expiringIds=new Set(expiring.map(threat=>threat.id));
     state.pendingThreats=state.pendingThreats.filter(threat=>!expiringIds.has(threat.id)&&isThreatIntact(state,threat));
-
-    const instant=instantWinner(state,color);
-    if(instant){
-      setWinner(state,instant);
-      return{ok:true,winner:instant,createdThreats:[]};
-    }
 
     const createdThreats=addNewThreats(state);
     state.turn=other(color);
@@ -214,6 +200,6 @@
     return{m:best,v:bestValue};
   }
 
-  return{SIZE,LINES,other,pieces,createState,cloneState,loadState,resetState,top,completeLines,vulnerableLines,mixedLines:vulnerableLines,hasBothStrigoi,instantWinner,allLargeLine:hasBothStrigoi,largeWinner:instantWinner,isThreatIntact,pendingFor,basicMoves,isLegalBlockMove,legalMoves,applyMove,nearLines,scoreState,immediateWin,bestMove};
+  return{SIZE,LINES,other,pieces,createState,cloneState,loadState,resetState,top,completeLines,vulnerableLines,mixedLines:vulnerableLines,isThreatIntact,pendingFor,basicMoves,isLegalBlockMove,legalMoves,applyMove,nearLines,scoreState,immediateWin,bestMove};
 });
 

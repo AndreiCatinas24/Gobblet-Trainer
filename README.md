@@ -9,10 +9,11 @@ Joc web inspirat de Gobblet Gobblers, cu piese tematice românești și un adver
 ## Regulile speciale `regula_strigoi_1`
 
 - Fiecare jucător are 6 piese: 2 Strigoi, 2 Pricolici și 2 Moroi.
-- O linie completă care conține ambii Strigoi și încă o piesă proprie câștigă instant.
-- O linie completă care nu conține ambii Strigoi devine vulnerabilă.
+- Orice linie completă devine roșie și aproape câștigătoare, fără victorie instant.
+- Adversarul are exact următoarea sa tură pentru a rupe linia.
 - Apărătorul are exact următoarea sa tură pentru blocaj.
-- Blocajul se face numai cu o piesă suficient de mare venită din rezervă, peste o piesă non-Strigoi din linie.
+- Blocajul se face cu o piesă suficient de mare din rezervă sau mutată de pe tablă.
+- Piesele proprii vizibile pot fi mutate pe un spațiu liber sau peste o piesă mai mică, inclusiv una proprie.
 - O singură mutare trebuie să blocheze toate amenințările care expiră în aceeași tură.
 - Amenințările existente se rezolvă înainte de scanarea liniilor noi.
 

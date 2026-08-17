@@ -18,11 +18,12 @@ test('fiecare jucator are doua piese din fiecare marime',()=>{
   }
 });
 
-test('o linie completa cu ambii Strigoi castiga instant',()=>{
+test('o linie completa cu ambii Strigoi devine aproape castigatoare',()=>{
   const state=R.createState();
   take(state,'b','bL1',0);take(state,'b','bL2',1);
   const result=R.applyMove(state,move('r','bM1',null,2),'b');
-  assert.equal(result.ok,true);assert.equal(state.winner,'b');assert.equal(state.over,true);assert.equal(state.pendingThreats.length,0);
+  assert.equal(result.ok,true);assert.equal(state.winner,null);assert.equal(state.over,false);assert.equal(state.pendingThreats.length,1);
+  assert.ok(R.legalMoves(state).every(candidate=>candidate.kind==='r'&&candidate.size==='L'&&candidate.to===2));
 });
 
 test('o linie mixta devine pending threat cu defender explicit',()=>{
@@ -34,12 +35,21 @@ test('o linie mixta devine pending threat cu defender explicit',()=>{
   assert.ok(R.legalMoves(state).every(candidate=>candidate.kind==='r'&&[1,2].includes(candidate.to)));
 });
 
-test('o piesa mutata de pe tabla nu poate bloca amenintarea',()=>{
+test('o piesa suficient de mare mutata de pe tabla poate bloca amenintarea',()=>{
   const state=R.createState();
   take(state,'b','bL1',0);take(state,'b','bM1',1);take(state,'o','oL1',4);
   R.applyMove(state,move('r','bS1',null,2),'b');
   const result=R.applyMove(state,move('b','oL1',4,2),'o');
-  assert.equal(result.ok,false);assert.equal(result.reason,'must-block-all');assert.equal(state.winner,null);
+  assert.equal(result.ok,true);assert.equal(state.winner,null);assert.equal(state.pendingThreats.filter(t=>t.attacker==='b').length,0);
+});
+
+test('piesele proprii pot merge pe liber sau peste o piesa proprie mai mica',()=>{
+  const state=R.createState();
+  take(state,'b','bM1',0);take(state,'b','bS1',1);
+  const moves=R.basicMoves(state,'b');
+  assert.ok(moves.some(candidate=>candidate.kind==='b'&&candidate.id==='bM1'&&candidate.from===0&&candidate.to===1));
+  assert.ok(moves.some(candidate=>candidate.kind==='b'&&candidate.id==='bM1'&&candidate.from===0&&candidate.to===2));
+  assert.ok(moves.some(candidate=>candidate.kind==='r'&&candidate.id==='bL1'&&candidate.to===0));
 });
 
 test('o singura mutare din rezerva poate bloca doua amenintari la intersectie',()=>{
@@ -70,14 +80,15 @@ test('linia adversarului descoperita asteapta urmatoarea tura a defenderului',()
   assert.equal(state.turn,'b');assert.equal(state.winner,null);assert.equal(R.pendingFor(state,'b').length,1);
 });
 
-test('pending threats se rezolva inaintea victoriei noi a defenderului',()=>{
+test('pending threats se rezolva inaintea scanarii liniei noi a defenderului',()=>{
   const state=R.createState();
   take(state,'b','bL1',0);take(state,'b','bM1',1);take(state,'o','oL1',5);take(state,'o','oL2',8);
   R.applyMove(state,move('r','bS1',null,2),'b');
   const block=R.legalMoves(state).find(candidate=>candidate.id==='oM1'&&candidate.to===2);
   assert.ok(block);
   R.applyMove(state,block,'o');
-  assert.equal(state.winner,'o');assert.equal(state.pendingThreats.filter(t=>t.attacker==='b').length,0);
+  assert.equal(state.winner,null);assert.equal(state.pendingThreats.filter(t=>t.attacker==='b').length,0);
+  assert.equal(state.pendingThreats.filter(t=>t.attacker==='o').length,1);assert.equal(state.turn,'b');
 });
 
 test('clone load si reset includ pending threats si winner state',()=>{
@@ -95,9 +106,9 @@ test('clone load si reset includ pending threats si winner state',()=>{
 
 test('AI si hint sunt constranse automat la un block legal',()=>{
   const state=R.createState();
-  take(state,'b','bL1',0);take(state,'b','bM1',1);R.applyMove(state,move('r','bS1',null,2),'b');
+  take(state,'b','bL1',0);take(state,'b','bM1',1);take(state,'o','oL1',4);R.applyMove(state,move('r','bS1',null,2),'b');
   const best=R.bestMove(state,'o').m;
-  assert.ok(best);assert.equal(best.kind,'r');assert.ok([1,2].includes(best.to));
+  assert.ok(best);assert.ok([1,2].includes(best.to));
   assert.ok(R.isLegalBlockMove(state,best,R.pendingFor(state,'o'),'o'));
 });
 
