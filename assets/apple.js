@@ -85,9 +85,14 @@ function renderThreatBanner(){
   if(game.over||!pending.length){banner.hidden=true;banner.textContent='';return;}
   const due=dueThreats();
   banner.hidden=false;
-  banner.className=`threat-banner${due.length?' is-due':''}`;
+  const boardDefenseAvailable=due.length&&moves().some(move=>move.kind==='b');
+  banner.className=`threat-banner${due.length?' is-due':''}${boardDefenseAvailable?' has-board-defense':''}`;
   if(due.length){
-    banner.textContent=game.turn==='b'?`APROAPE CÂȘTIG: rupe ${due.length===1?'linia roșie':'toate liniile roșii'} cu o mască potrivită din rezervă sau de pe tablă.`:`AI trebuie să rupă ${due.length===1?'linia roșie':'toate liniile roșii'} în această tură.`;
+    if(game.turn==='b'){
+      banner.textContent=`APROAPE CÂȘTIG: rupe ${due.length===1?'linia roșie':'toate liniile roșii'} cu o mască mai mare din rezervă sau mutând una albastră de pe tablă peste o mască portocalie mai mică. ${boardDefenseAvailable?'Măștile albastre care pot apăra pulsează verde. ':''}Atenție: dacă ridicarea unei măști descoperă o linie portocalie completă, AI câștigă imediat.`;
+    }else{
+      banner.textContent=`AI trebuie să rupă ${due.length===1?'linia roșie':'toate liniile roșii'} în această tură. Poate folosi rezerva sau o mască portocalie deja de pe tablă; dacă ridicarea ei descoperă o linie albastră completă, câștigi imediat.`;
+    }
   }else{
     banner.textContent=`${pending.length} ${pending.length===1?'linie aproape câștigătoare':'linii aproape câștigătoare'}. Conturul roșu arată căsuțele implicate.`;
   }
@@ -109,19 +114,24 @@ function selectReserve(id){
 function selectBoard(index){
   if(game.turn!=='b'||game.over)return;
   const piece=top(index);if(piece&&piece.color==='b'){
-    if(dueThreats('b').length&&!moves('b').some(move=>move.kind==='b'&&move.from===index)){msg('Această piesă nu poate rupe toate liniile roșii. Alege una evidențiată sau o piesă potrivită din rezervă.');return;}
-    selected={kind:'b',id:piece.id,size:piece.size,from:index};render();
+    if(dueThreats('b').length&&!moves('b').some(move=>move.kind==='b'&&move.from===index)){msg('Această piesă nu poate rupe toate liniile roșii. Alege una care pulsează verde sau o piesă potrivită din rezervă.');return;}
+    selected={kind:'b',id:piece.id,size:piece.size,from:index};
+    if(dueThreats('b').length)msg('Poți muta această mască peste o mască portocalie mai mică din linia roșie. Atenție la ce se află sub ea: dacă ridicarea descoperă o linie portocalie completă, pierzi imediat.');
+    render();
   }
 }
 function playTo(index){
   if(game.turn!=='b'||game.over||!selected)return;
   const candidates=moves('b'),chosen=candidates.find(move=>move.id===selected.id&&move.from===selected.from&&move.to===index);
-  if(!chosen){msg(dueThreats('b').length?'Blocaj ilegal. Folosește o piesă suficient de mare din rezervă sau de pe tablă, pe o căsuță comună tuturor liniilor roșii.':'Mutare ilegală. O piesă poate acoperi doar o piesă mai mică.');return;}
+  if(!chosen){msg(dueThreats('b').length?'Blocaj ilegal. Folosește o piesă suficient de mare din rezervă sau de pe tablă, peste o piesă portocalie mai mică din linia roșie.':'Mutare ilegală. O piesă poate acoperi doar o piesă mai mică.');return;}
   const before=clone(),recommendation=E.bestMove(game,'b').m;
   history.push({state:before,log:JSON.parse(JSON.stringify(log))});
   const result=E.applyMove(game,chosen,'b');
   selected=null;hintMove=null;log.push({b:desc(chosen),o:''});
-  if(result.winner){finish(result.winner);return;}
+  if(result.winner){
+    const reason=result.revealedWin&&result.winner==='o'?'Ai ridicat o mască pentru apărare și ai descoperit dedesubt o linie portocalie completă. AI câștigă imediat.':null;
+    finish(result.winner,reason);return;
+  }
   const created=result.createdThreats.filter(threat=>threat.attacker==='b').length;
   if(created)msg(`${created===1?'Linie aproape câștigătoare creată':'Linii aproape câștigătoare create'}. AI are exact această tură pentru a ${created===1?'o':'le'} rupe.`);
   else msg(desc(chosen)===desc(recommendation)?`Foarte bine. ${desc(chosen)} este recomandarea motorului.`:`Ai jucat ${desc(chosen)}. Motorul preferă ${desc(recommendation)}.`);
@@ -134,9 +144,12 @@ function ai(){
   if(!best){if(game.winner)finish(game.winner);else{game.turn='b';render();}return;}
   const result=E.applyMove(game,best,'o');impactCell=best.to;if(log.length)log[log.length-1].o=desc(best);
   try{if(navigator.vibrate)navigator.vibrate(35);}catch(error){}
-  if(result.winner){msg(`AI a jucat ${desc(best)}. Lovitură decisivă.`);render();impactTimer=setTimeout(()=>{impactTimer=null;impactCell=null;finish(result.winner);},900);return;}
+  if(result.winner){
+    const reason=result.revealedWin&&result.winner==='b'?'AI a ridicat o mască pentru apărare și a descoperit o linie albastră completă. Ai câștigat imediat.':`AI a jucat ${desc(best)}. Lovitură decisivă.`;
+    msg(reason);render();impactTimer=setTimeout(()=>{impactTimer=null;impactCell=null;finish(result.winner,reason);},900);return;
+  }
   const due=dueThreats('b');
-  msg(due.length?`AI a jucat ${desc(best)}. Ai o singură tură pentru a rupe ${due.length===1?'linia roșie':'toate liniile roșii'}.`:`AI a jucat ${desc(best)}. Încearcă să creezi o linie aproape câștigătoare.`);
+  msg(due.length?`AI a jucat ${desc(best)}. Ai o singură tură pentru a rupe ${due.length===1?'linia roșie':'toate liniile roșii'}. Poți folosi și o mască albastră deja de pe tablă dacă este suficient de mare.`:`AI a jucat ${desc(best)}. Încearcă să creezi o linie aproape câștigătoare.`);
   render();impactTimer=setTimeout(()=>{impactTimer=null;impactCell=null;render();},900);
 }
 function hint(){
@@ -149,16 +162,16 @@ function hint(){
 function analyze(){
   if(game.turn!=='b'||game.over)return;
   const best=E.bestMove(game,'b'),score=E.scoreState(game,'b'),due=dueThreats('b');
-  msg(due.length?`Poziție critică: trebuie să blochezi ${due.length===1?'amenințarea':'toate amenințările'} acum. Cea mai bună mutare: ${desc(best.m)}.`:`Poziție: ${score>60?'avantaj albastru':score<-60?'avantaj portocaliu':'aproape egal'}. Cea mai bună mutare: ${desc(best.m)}.`);
+  msg(due.length?`Poziție critică: trebuie să blochezi ${due.length===1?'amenințarea':'toate amenințările'} acum. Poți folosi rezerva sau o piesă proprie de pe tablă. Cea mai bună mutare: ${desc(best.m)}.`:`Poziție: ${score>60?'avantaj albastru':score<-60?'avantaj portocaliu':'aproape egal'}. Cea mai bună mutare: ${desc(best.m)}.`);
 }
 function undo(){
   if(!history.length)return;clearTimers();const entry=history.pop();load(entry.state);log=entry.log;selected=null;hintMove=null;impactCell=null;
   $('loseOverlay').classList.remove('show');msg('Am revenit înaintea ultimei tale mutări, inclusiv cu amenințările și câștigătorul restaurate.');render();
 }
 function fireworks(){const box=$('fireworks'),colors=['#4d94ff','#8b5cf6','#72e4ff','#ff8b41','#ffffff'];box.innerHTML='';for(let burst=0;burst<7;burst++){const x=10+Math.random()*80,y=10+Math.random()*55;for(let index=0;index<18;index++){const spark=document.createElement('span');spark.className='fire';spark.style.left=x+'vw';spark.style.top=y+'vh';spark.style.background=colors[Math.floor(Math.random()*colors.length)];const angle=Math.random()*Math.PI*2,distance=50+Math.random()*90;spark.style.setProperty('--x',Math.cos(angle)*distance+'px');spark.style.setProperty('--y',Math.sin(angle)*distance+'px');spark.style.animationDelay=burst*.08+'s';box.appendChild(spark);}}setTimeout(()=>box.innerHTML='',1700);}
-function finish(winner){
+function finish(winner,reason){
   clearTaunt();game.winner=winner;game.over=true;
-  if(winner==='b')msg('Ai câștigat. Bravo.');else{msg('AI a câștigat. Ai fost învins în Arena Strigoilor.');$('loseOverlay').classList.add('show');fireworks();}
+  if(winner==='b')msg(reason||'Ai câștigat. Bravo.');else{msg(reason||'AI a câștigat. Ai fost învins în Arena Strigoilor.');$('loseOverlay').classList.add('show');fireworks();}
   render();
 }
 function reset(){
