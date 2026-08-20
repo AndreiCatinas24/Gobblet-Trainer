@@ -1,67 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220" role="img" aria-label="Moroi alb portocaliu">
   <defs>
-    <radialGradient id="orangeAura" cx="50%" cy="52%" r="54%">
-      <stop offset="0%" stop-color="#fff1d8" stop-opacity="0.35"/>
-      <stop offset="38%" stop-color="#ff9a2f" stop-opacity="0.58"/>
-      <stop offset="70%" stop-color="#ff5a00" stop-opacity="0.75"/>
-      <stop offset="100%" stop-color="#3b1200" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="48%" stop-color="#f3f3ec"/>
-      <stop offset="100%" stop-color="#c9c9c2"/>
-    </linearGradient>
-    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#f9f9f2"/>
-      <stop offset="52%" stop-color="#deded7"/>
-      <stop offset="100%" stop-color="#9b9b94"/>
-    </linearGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="5" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 1 0 0 0 0 0.32 0 0 0 0 0 0 0 0 0.9 0" result="orange"/>
-      <feMerge><feMergeNode in="orange"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <clipPath id="rightMaskFace">
+      <path d="M110 24 C148 25 176 60 178 107 C180 157 151 197 111 203 L108 203 L108 24 Z"/>
+    </clipPath>
+    <filter id="darkSideToWhite" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="1.08" intercept="0.02"/>
+        <feFuncG type="linear" slope="1.08" intercept="0.02"/>
+        <feFuncB type="linear" slope="1.08" intercept="0.02"/>
+        <feFuncA type="identity"/>
+      </feComponentTransfer>
     </filter>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
-      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000" flood-opacity="0.42"/>
-    </filter>
+    <linearGradient id="softWhiteBlend" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0.22" stop-color="#ffffff" stop-opacity="0.13"/>
+      <stop offset="0.58" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
   </defs>
 
-  <circle cx="110" cy="111" r="84" fill="url(#orangeAura)" filter="url(#glow)"/>
-  <g opacity="0.85" stroke="#ff7a1a" stroke-width="2" stroke-linecap="round">
-    <path d="M28 113 C43 81,54 58,82 39" opacity="0.55"/>
-    <path d="M192 112 C177 80,165 58,138 39" opacity="0.55"/>
-    <path d="M39 152 C66 182,150 185,181 151" opacity="0.45"/>
-  </g>
+  <image href="mask-small-orange.svg" x="0" y="0" width="220" height="220" preserveAspectRatio="xMidYMid meet"/>
 
-  <g filter="url(#shadow)">
-    <path d="M110 28 C77 29,52 56,49 91 C46 132,62 178,110 191 C158 178,174 132,171 91 C168 56,143 29,110 28 Z" fill="url(#face)"/>
-    <path d="M110 28 C142 30,166 56,169 92 C171 132,157 174,113 190 C131 145,132 77,110 28 Z" fill="url(#edge)" opacity="0.34"/>
-    <path d="M110 28 C77 29,52 56,49 91 C46 132,62 178,110 191 C158 178,174 132,171 91 C168 56,143 29,110 28 Z" fill="none" stroke="#f7f7f2" stroke-width="5" opacity="0.72"/>
-    <path d="M110 30 C78 31,54 57,51 92 C48 131,63 176,110 188 C157 176,172 131,169 92 C166 57,142 31,110 30 Z" fill="none" stroke="#1f242c" stroke-width="2" opacity="0.35"/>
-
-    <path d="M76 93 C86 84,98 86,103 95 C96 105,83 105,74 98 Z" fill="#111821"/>
-    <path d="M144 93 C134 84,122 86,117 95 C124 105,137 105,146 98 Z" fill="#111821"/>
-    <ellipse cx="88" cy="96" rx="8" ry="5" fill="#fff7ee" opacity="0.18"/>
-    <ellipse cx="132" cy="96" rx="8" ry="5" fill="#fff7ee" opacity="0.18"/>
-
-    <path d="M110 78 C105 101,101 119,98 135 C106 138,114 138,122 135 C119 119,115 101,110 78 Z" fill="#e9e7df" stroke="#111821" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M110 80 L110 137" stroke="#6b6b64" stroke-width="1.5" opacity="0.75"/>
-
-    <path d="M72 71 C83 65,94 66,102 72" stroke="#171b21" stroke-width="7" stroke-linecap="round" fill="none"/>
-    <path d="M148 71 C137 65,126 66,118 72" stroke="#171b21" stroke-width="7" stroke-linecap="round" fill="none"/>
-    <path d="M83 153 C100 160,121 160,138 153" stroke="#171b21" stroke-width="7" stroke-linecap="round" fill="none"/>
-    <path d="M86 169 C101 174,119 174,134 169" stroke="#171b21" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.82"/>
-
-    <g fill="#15191f" opacity="0.88">
-      <circle cx="110" cy="50" r="3"/>
-      <circle cx="110" cy="61" r="2.8"/>
-      <circle cx="110" cy="71" r="2.5"/>
-    </g>
-    <path d="M70 123 C78 126,85 127,93 126" stroke="#252a31" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
-    <path d="M150 123 C142 126,135 127,127 126" stroke="#252a31" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
-  </g>
-  <g filter="url(#shadow)">
-    <circle cx="176" cy="176" r="23" fill="#071120" stroke="#ff7a1a" stroke-width="5"/>
-    <text x="176" y="185" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text',Arial,sans-serif" font-size="28" font-weight="900" fill="#ffffff">S</text>
+  <g clip-path="url(#rightMaskFace)">
+    <image href="mask-small-orange.svg" x="0" y="0" width="220" height="220" preserveAspectRatio="xMidYMid meet" filter="url(#darkSideToWhite)"/>
+    <rect x="105" y="32" width="64" height="164" fill="url(#softWhiteBlend)" opacity="0.42"/>
   </g>
 </svg>
