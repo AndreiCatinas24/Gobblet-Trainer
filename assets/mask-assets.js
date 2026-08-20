@@ -23,6 +23,15 @@
       if(size==='S'&&piece){
         piece.classList.add('moroi-mirror-white');
         piece.style.setProperty('--moroi-source',`url("${uri}")`);
+
+        let badge=piece.querySelector('.moroi-size-badge');
+        if(!badge){
+          badge=document.createElement('span');
+          badge.textContent='S';
+          badge.setAttribute('aria-hidden','true');
+          piece.appendChild(badge);
+        }
+        badge.className=`moroi-size-badge team-${color}`;
       }
     });
   }
