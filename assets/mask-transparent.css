@@ -1,10 +1,33 @@
-/* Final Safari-safe transparent rendering for Pricolici (M) and Moroi (S). */
+/* Safari-safe transparent rendering for Pricolici (M) and Moroi (S). */
 html body .piece.M::before,
 html body .piece.M::after,
-html body .piece.S::before,
 html body .piece.S::after{
   display:none!important;
   content:none!important;
+}
+
+html body .piece.S::before{
+  display:none!important;
+  content:none!important;
+}
+
+/* Moroi keeps the original PNG, aura and S badge. The original white half is mirrored over the dark half. */
+html body .piece.S.moroi-mirror-white::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  pointer-events:none!important;
+  background-image:var(--moroi-source)!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:100% 100%!important;
+  transform:scaleX(-1)!important;
+  transform-origin:center center!important;
+  clip-path:inset(0 50% 0 0)!important;
+  -webkit-clip-path:inset(0 50% 0 0)!important;
+  mix-blend-mode:normal!important;
 }
 
 html body .piece .mask-art.team-b.size-M,
