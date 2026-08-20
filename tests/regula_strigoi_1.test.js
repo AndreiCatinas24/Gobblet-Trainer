@@ -83,14 +83,13 @@ test('atacatorul castiga daca doua amenintari nu pot fi blocate de aceeasi mutar
   assert.equal(state.winner,'b');assert.equal(state.over,true);assert.equal(state.pendingThreats.length,2);
 });
 
-test('linia adversarului descoperita asteapta urmatoarea tura a defenderului',()=>{
+test('orice mutare de pe tabla pierde imediat daca ridicarea descopera linia adversarului',()=>{
   const state=R.createState();
   take(state,'o','oL1',0);take(state,'o','oS1',1);take(state,'o','oM1',2);take(state,'b','bL1',2);
-  const first=R.applyMove(state,move('b','bL1',2,3),'b');
-  assert.equal(first.ok,true);assert.equal(state.turn,'o');assert.equal(state.winner,null);
-  assert.equal(state.pendingThreats[0].attacker,'o');assert.equal(state.pendingThreats[0].defender,'b');
-  R.applyMove(state,move('r','oS2',null,8),'o');
-  assert.equal(state.turn,'b');assert.equal(state.winner,null);assert.equal(R.pendingFor(state,'b').length,1);
+  const result=R.applyMove(state,move('b','bL1',2,3),'b');
+  assert.equal(result.ok,true);assert.equal(result.revealedWin,true);assert.equal(state.winner,'o');assert.equal(state.over,true);
+  assert.equal(R.top(state,2).id,'oM1');assert.equal(R.top(state,3),null);
+  assert.ok(result.revealedLines.some(line=>line.join('-')==='0-1-2'));
 });
 
 test('pending threats se rezolva inaintea scanarii liniei noi a defenderului',()=>{
