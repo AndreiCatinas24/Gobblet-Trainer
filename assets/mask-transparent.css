@@ -30,31 +30,40 @@ html body .piece.S.moroi-mirror-white::before{
   mix-blend-mode:normal!important;
 }
 
-/* Mirroring covers the original lower-right badge, so restore S as a real overlay. */
+/* Legacy pseudo badge remains disabled; Safari now gets a real DOM badge instead. */
 html body .piece.S.moroi-mirror-white::after{
-  content:"S"!important;
-  display:flex!important;
+  display:none!important;
+  content:none!important;
+}
+
+html body .piece.S .moroi-size-badge{
   position:absolute!important;
   right:2%!important;
   bottom:2%!important;
-  width:clamp(20px,28%,34px)!important;
+  width:28%!important;
+  min-width:20px!important;
+  max-width:34px!important;
   aspect-ratio:1/1!important;
+  display:flex!important;
   align-items:center!important;
   justify-content:center!important;
   box-sizing:border-box!important;
   border-radius:50%!important;
-  z-index:4!important;
+  z-index:6!important;
   pointer-events:none!important;
   color:#fff!important;
-  background:rgba(6,14,30,.96)!important;
+  background:rgba(6,14,30,.97)!important;
   border:2px solid #4aa2ff!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 8px rgba(45,145,255,.9),0 0 16px rgba(0,92,255,.5)!important;
-  font:800 clamp(12px,15%,17px)/1 -apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 0 8px rgba(45,145,255,.95),0 0 16px rgba(0,92,255,.55)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif!important;
+  font-size:clamp(12px,3.6vw,17px)!important;
+  font-weight:800!important;
+  line-height:1!important;
   text-align:center!important;
 }
-html body .piece.S.moroi-mirror-white:has(.mask-art.team-o)::after{
+html body .piece.S .moroi-size-badge.team-o{
   border-color:#ff8a37!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 8px rgba(255,126,42,.9),0 0 16px rgba(255,75,0,.5)!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 0 8px rgba(255,126,42,.95),0 0 16px rgba(255,75,0,.55)!important;
 }
 
 html body .piece .mask-art.team-b.size-M,
