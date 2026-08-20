@@ -11,7 +11,7 @@ html body .piece.S::before{
   content:none!important;
 }
 
-/* Moroi keeps the original PNG, aura and S badge. The original white half is mirrored over the dark half. */
+/* Moroi keeps the original PNG and aura. The original white half is mirrored over the dark half. */
 html body .piece.S.moroi-mirror-white::before{
   content:""!important;
   display:block!important;
@@ -28,6 +28,33 @@ html body .piece.S.moroi-mirror-white::before{
   clip-path:inset(0 50% 0 0)!important;
   -webkit-clip-path:inset(0 50% 0 0)!important;
   mix-blend-mode:normal!important;
+}
+
+/* Mirroring covers the original lower-right badge, so restore S as a real overlay. */
+html body .piece.S.moroi-mirror-white::after{
+  content:"S"!important;
+  display:flex!important;
+  position:absolute!important;
+  right:2%!important;
+  bottom:2%!important;
+  width:clamp(20px,28%,34px)!important;
+  aspect-ratio:1/1!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  border-radius:50%!important;
+  z-index:4!important;
+  pointer-events:none!important;
+  color:#fff!important;
+  background:rgba(6,14,30,.96)!important;
+  border:2px solid #4aa2ff!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 8px rgba(45,145,255,.9),0 0 16px rgba(0,92,255,.5)!important;
+  font:800 clamp(12px,15%,17px)/1 -apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif!important;
+  text-align:center!important;
+}
+html body .piece.S.moroi-mirror-white:has(.mask-art.team-o)::after{
+  border-color:#ff8a37!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 8px rgba(255,126,42,.9),0 0 16px rgba(255,75,0,.5)!important;
 }
 
 html body .piece .mask-art.team-b.size-M,
