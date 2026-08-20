@@ -120,7 +120,7 @@
     if(!allowed.some(candidate=>moveMatches(candidate,move)))return{ok:false,reason:pendingFor(state,color).length?'must-block-all':'illegal-move'};
     const expiring=pendingFor(state,color);
 
-    if(expiring.length&&move.kind==='b'){
+    if(move.kind==='b'){
       const opponent=other(color);
       const beforeOpponentLines=new Set(completeLines(state,opponent).map(line=>line.join('-')));
       const piece=state.board[move.from].pop();
