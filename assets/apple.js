@@ -2,7 +2,7 @@
 'use strict';
 const E=window.RegulaStrigoi1;
 if(!E)throw new Error('regula_strigoi_1 engine is missing');
-const IMG={b:{L:'assets/mask-large.svg',M:'assets/mask-medium-transparent.svg',S:'assets/mask-small-white.svg'},o:{L:'assets/mask-large-orange.svg',M:'assets/mask-medium-orange-transparent.svg',S:'assets/mask-small-white-orange.svg'}};
+const IMG={b:{L:'assets/mask-large.svg',M:'assets/mask-medium-transparent.svg',S:'assets/mask-small-white.svg?v=20260820b'},o:{L:'assets/mask-large-orange.svg',M:'assets/mask-medium-orange-transparent.svg',S:'assets/mask-small-white-orange.svg?v=20260820b'}};
 const TYPE_NAME={S:'Moroi',M:'Pricolici',L:'Strigoi'},PIECES_PER_SIZE=2;
 const TAUNTS=['Mama ta știe ce faci?','Ești de belea, vai de mama ta.','Nu mai plânge! Nu mai suferi!','Ai în cap loc doar pentru manele.','Cred că e nevoie să închizi Pornhub.','Ești slab la minte, dar ai alte calități.','Cine te recomandă? Mama ta?','Atât de slab nu am mai văzut.','De asta nu ne vizitează extratereștrii.','Mai bine joci Bambilici cu copiii.','Lasă-te, că nu e de tine.'];
 let game,selected,history,log,hintMove=null,impactCell=null,aiTimer=null,impactTimer=null,lastTaunt=-1;
