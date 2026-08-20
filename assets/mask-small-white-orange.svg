@@ -60,4 +60,8 @@
     <path d="M70 123 C78 126,85 127,93 126" stroke="#252a31" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
     <path d="M150 123 C142 126,135 127,127 126" stroke="#252a31" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
   </g>
+  <g filter="url(#shadow)">
+    <circle cx="176" cy="176" r="23" fill="#071120" stroke="#ff7a1a" stroke-width="5"/>
+    <text x="176" y="185" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text',Arial,sans-serif" font-size="28" font-weight="900" fill="#ffffff">S</text>
+  </g>
 </svg>
