@@ -1,19 +1,16 @@
 (()=>{
   const SOURCES={
     'b-M':'assets/mask-data/medium-blue-144.txt?v=20260814s',
-    'o-M':'assets/mask-data/medium-orange-144.txt?v=20260814s',
-    'b-S':'assets/mask-data/small-blue-144.txt?v=20260814s',
-    'o-S':'assets/mask-data/small-orange-144.txt?v=20260814s'
+    'o-M':'assets/mask-data/medium-orange-144.txt?v=20260814s'
   };
   const masks={};
   let ready=false;
 
   function apply(root=document){
     if(!ready)return;
-    root.querySelectorAll?.('.mask-art.size-M,.mask-art.size-S').forEach(img=>{
+    root.querySelectorAll?.('.mask-art.size-M').forEach(img=>{
       const color=img.classList.contains('team-b')?'b':'o';
-      const size=img.classList.contains('size-M')?'M':'S';
-      const uri=masks[`${color}-${size}`];
+      const uri=masks[`${color}-M`];
       if(uri&&img.getAttribute('src')!==uri){
         img.setAttribute('src',uri);
         img.dataset.transparentMask='1';
@@ -34,7 +31,7 @@
       for(const record of records){
         record.addedNodes.forEach(node=>{
           if(node.nodeType===1){
-            if(node.matches?.('.mask-art.size-M,.mask-art.size-S'))apply(node.parentElement||node);
+            if(node.matches?.('.mask-art.size-M'))apply(node.parentElement||node);
             else apply(node);
           }
         });
